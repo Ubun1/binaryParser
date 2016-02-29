@@ -1,0 +1,55 @@
+﻿<Window x:Class="JonesWPF.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local ="clr-namespace:JonesWPF.ViewModels"
+        Title=".prn Analyzer" Height="auto" Width="300" SizeToContent="Height" ResizeMode="NoResize">
+
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+
+    <StackPanel>
+        <Menu Grid.Row="0" Grid.ColumnSpan="3">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Command="{Binding OpenCommand}" ></MenuItem>
+                <MenuItem Header="Save to" Command="{Binding SaveToCommand}"></MenuItem>
+            </MenuItem> 
+            <MenuItem Header="Select Boundaries" Command="{Binding SelectBoundaries}"></MenuItem>
+            <MenuItem Header="Configurate output"/>
+        </Menu>
+       
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width ="0.5*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Name="logBlock" Text="{Binding Path=MainTblk, Mode=OneWay}"/>
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" Name="mainThread" Height="40" Value="{Binding Path =TotalCount, Mode=OneWay}"></ProgressBar>
+            <Button Grid.Row="2" Grid.Column="0" Content="Start" Command="{Binding ClickCommand}"></Button>
+            <Button Grid.Row="2" Grid.Column="2" Content="---" Command="{Binding CancelCommand}" IsEnabled="False"/>
+            <StackPanel Grid.Row="4" Grid.ColumnSpan="3">
+                <Expander Header="Treads progress">
+                    <StackPanel>
+                        <TextBlock Name="textblockThread1" Text="{Binding Path=FirstTblk, Mode=OneWay}"></TextBlock>
+                        <ProgressBar Height="10" Value="{Binding Path=FirstThrdCount, Mode=OneWay}"></ProgressBar>
+                        <TextBlock Name="textBlockThread2" Text="{Binding Path=SecondTblk, Mode=OneWay}"></TextBlock>
+                        <ProgressBar Height="10" Value="{Binding Path=SecondThrdCount, Mode=OneWay}"></ProgressBar>
+                        <TextBlock Name="textBlockThread3" Text="{Binding Path=ThirdTblk, Mode=OneWay}"/>
+                        <ProgressBar Height="10" Value="{Binding Path=ThirdThrdCount, Mode=OneWay}"></ProgressBar>
+                        <TextBlock Name="textBlockThread4" Text="{Binding Path=FouthTblk, Mode=OneWay}"/>
+                        <ProgressBar Height="10" Value="{Binding Path=FourthThrdCount, Mode=OneWay}"/>
+                    </StackPanel>
+                </Expander>
+                <TextBox Height="350" Text="{Binding Path=LogText}" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" IsReadOnly="True" TextWrapping="Wrap"></TextBox>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</Window>

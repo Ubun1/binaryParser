@@ -1,0 +1,20 @@
+﻿<Window x:Class="JonesWPF.View.ConfigurateOutputView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JonesWPF.View"
+        mc:Ignorable="d"
+        Title="Configurate Output" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <StackPanel>
+        <CheckBox Content="x coord" IsChecked="True"/>
+        <CheckBox Content="y coord" IsChecked="True"/>
+        <CheckBox Content="Time" IsChecked="True"/>
+        <CheckBox Content="Temperature" IsChecked="True"/>
+        <CheckBox Content="Density"/>
+        <CheckBox Content="Water content"/>
+        <CheckBox Content="Viscosity"/>
+        <CheckBox Content="Relative deformation"/>
+        <CheckBox Content="Rock type"/>
+    </StackPanel>
+</Window>
