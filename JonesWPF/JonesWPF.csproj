@@ -100,6 +100,7 @@
     </ApplicationDefinition>
     <Compile Include="Analizer.cs" />
     <Compile Include="ViewModels\BordersViewModel.cs" />
+    <Compile Include="ViewModels\ConfigurateOutputViewModel.cs" />
     <Compile Include="View\BordersForAnalyseView.xaml.cs">
       <DependentUpon>BordersForAnalyseView.xaml</DependentUpon>
     </Compile>

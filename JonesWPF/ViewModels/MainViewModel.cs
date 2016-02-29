@@ -13,11 +13,12 @@ namespace JonesWPF.ViewModels
 {
     class MainViewModel : INotifyPropertyChanged
     {
-        public ICommand ClickCommand { get; set; }
+        public ICommand StartCommand { get; set; }
         public ICommand OpenCommand { get; set; }
         public ICommand CancelCommand { get; set; }
         public ICommand SaveToCommand { get; set; }
         public ICommand SelectBoundaries { get; set; }
+        public ICommand ConfigOutCommand { get; set; }
 
         #region PropsForUI
         private string mainTblk;
@@ -186,11 +187,12 @@ namespace JonesWPF.ViewModels
         {
             Initialize();
 
-            ClickCommand = new RelayCommand(arg => ClickMethod(), arg => startButtEnable);
+            StartCommand = new RelayCommand(arg => StartMethod(), arg => startButtEnable);
             OpenCommand = new RelayCommand(arg => OpenMethod());
             CancelCommand = new RelayCommand(arg => CancelMethod());
             SaveToCommand = new RelayCommand(arg => SaveToMethod(), arg => directories == null ? false : true);
             SelectBoundaries = new RelayCommand(arg => SelectBoundariesMethod());
+            ConfigOutCommand = new RelayCommand(arg => ConfigOutMethod());
         }
 
         private void Initialize()
@@ -231,11 +233,17 @@ namespace JonesWPF.ViewModels
 
         private void SelectBoundariesMethod()
         {
-            var window = new BordersForAnalyseView();
-            window.ShowDialog();
+            var selectBoundarWindow = new BordersForAnalyseView();
+            selectBoundarWindow.ShowDialog();
         }
 
-        private async void ClickMethod()
+        private void ConfigOutMethod()
+        {
+            var configOutWindow = new ConfigurateOutputView();
+            configOutWindow.ShowDialog();
+        }
+
+        private async void StartMethod()
         {
             startButtEnable = false;
 

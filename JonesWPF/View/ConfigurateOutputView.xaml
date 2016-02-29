@@ -3,13 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JonesWPF.View"
+        xmlns:local="clr-namespace:JonesWPF.ViewModels"
         mc:Ignorable="d"
         Title="Configurate Output" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    
+    <Window.DataContext>
+        <local:ConfigurateOutputViewModel/>
+    </Window.DataContext>
+    
     <StackPanel>
-        <CheckBox Content="x coord" IsChecked="True"/>
-        <CheckBox Content="y coord" IsChecked="True"/>
-        <CheckBox Content="Time" IsChecked="True"/>
+        <TextBlock Text="Reported information"></TextBlock>
+        <CheckBox Content="X coord" IsChecked="True"/>
+        <CheckBox Content="Y coord" IsChecked="True"/>
+        <CheckBox Content="Time" IsChecked="{Binding Path=TimeIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Temperature" IsChecked="True"/>
         <CheckBox Content="Density"/>
         <CheckBox Content="Water content"/>

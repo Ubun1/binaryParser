@@ -15,7 +15,7 @@
                 <MenuItem Header="Save to" Command="{Binding SaveToCommand}"></MenuItem>
             </MenuItem> 
             <MenuItem Header="Select Boundaries" Command="{Binding SelectBoundaries}"></MenuItem>
-            <MenuItem Header="Configurate output"/>
+            <MenuItem Header="Configurate output" Command="{Binding ConfigOutCommand}"/>
         </Menu>
        
         <Grid>
