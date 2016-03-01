@@ -43,7 +43,7 @@ namespace JonesWPF
             CancellationToken token = obj.Token;
 
             ProgressStarted(workerID, path);
-
+            //TODO вернуть рабочий код через binReader!
             FastRead(path);
 
             token.ThrowIfCancellationRequested();
