@@ -4,25 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JonesWPF.ViewModels"
+        xmlns:i ="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="Configurate Output" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
-
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Window.DataContext>
         <local:ConfigurateOutputViewModel/>
     </Window.DataContext>
-    
+
     <StackPanel>
         <TextBlock Text="Reported information"></TextBlock>
         <CheckBox Content="X coord" IsChecked="{Binding Path=XIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Y coord" IsChecked="{Binding Path=YIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Time" IsChecked="{Binding Path=TimeIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Temperature" IsChecked="{Binding Path=TempIsChecked, Mode=TwoWay}"/>
-        <CheckBox Content="Density"/>
-        <CheckBox Content="Water content"/>
-        <CheckBox Content="Viscosity"/>
-        <CheckBox Content="Relative deformation"/>
-        <CheckBox Content="Rock type"/>
-        <Button Content="Save" Command="{Binding CloseCommand}"/>
+        <CheckBox Content="Density" IsChecked="{Binding Path=DensityIsChecked, Mode=TwoWay}"/>
+        <CheckBox Content="Water content" IsChecked="{Binding Path=WaterContentIsChecked, Mode=TwoWay}"/>
+        <CheckBox Content="Viscosity" IsChecked="{Binding Path=ViscosityIsChecked, Mode=TwoWay}"/>
+        <CheckBox Content="Relative deformation" IsChecked="{Binding Path=RelativeDefIsChecked, Mode=TwoWay}"/>
+        <CheckBox Content="Rock type" IsChecked="{Binding Path=RockTypeIsChecked, Mode=TwoWay}"/>
     </StackPanel>
 </Window>

@@ -32,7 +32,7 @@ namespace JonesWPF.ViewModels
                 if (timeIsChecked != value)
                 {
                     timeIsChecked = value;
-                    OnPropertyChanged(nameof(TimeIsChecked), timeIsChecked ? SelectedReportInf.Time : SelectedReportInf.Default);
+                    OnPropertyChanged(nameof(TimeIsChecked), SelectedReportInf.Time);
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace JonesWPF.ViewModels
                 if (tempIsChecked != value)
                 {
                     tempIsChecked = value;
-                    OnPropertyChanged(nameof(TempIsChecked), tempIsChecked ? SelectedReportInf.Temp : SelectedReportInf.Default);
+                    OnPropertyChanged(nameof(TempIsChecked), SelectedReportInf.Temp);
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace JonesWPF.ViewModels
                 if (xIsChecked != value)
                 {
                     xIsChecked = value;
-                    OnPropertyChanged(nameof(XIsChecked), xIsChecked ? SelectedReportInf.X : SelectedReportInf.Default);
+                    OnPropertyChanged(nameof(XIsChecked), SelectedReportInf.X);
                 }
             }
         }
@@ -72,7 +72,74 @@ namespace JonesWPF.ViewModels
                 if (yIsChecked != value)
                 {
                     yIsChecked = value;
-                    OnPropertyChanged(nameof(YIsChecked), yIsChecked ? SelectedReportInf.Y : SelectedReportInf.Default);
+                    OnPropertyChanged(nameof(YIsChecked), SelectedReportInf.Y);
+                }
+            }
+        }
+
+        private bool densityIsChecked;
+        public bool DensityIsChecked
+        {
+            get { return densityIsChecked; }
+            set {
+                if (densityIsChecked != value)
+                {
+                    densityIsChecked = value;
+                    OnPropertyChanged(nameof(DensityIsChecked), SelectedReportInf.Density);
+                }
+            }
+        }
+
+        private bool waterContentIsChecked;
+        public bool WaterContentIsChecked
+        {
+            get { return waterContentIsChecked; }
+            set {
+                if (densityIsChecked != value)
+                {
+                    waterContentIsChecked = value;
+                    OnPropertyChanged(nameof(WaterContentIsChecked), SelectedReportInf.Water);
+                }
+            }
+        }
+
+        private bool viscosityIsChecked;
+        public bool ViscosityIsChecked
+        {
+            get { return viscosityIsChecked; }
+            set
+            {
+                if (viscosityIsChecked != value)
+                {
+                    viscosityIsChecked = value;
+                    OnPropertyChanged(nameof(ViscosityIsChecked), SelectedReportInf.Viscosity);
+                }
+            }
+        }
+
+        private bool relativeDefIsChecked;
+        public bool RelativeDefIsChecked
+        {
+            get { return relativeDefIsChecked; }
+            set
+            {
+                if (relativeDefIsChecked != value)
+                {
+                    relativeDefIsChecked = value;
+                    OnPropertyChanged(nameof(RelativeDefIsChecked), SelectedReportInf.RelativeDeformation);
+                }
+            }
+        }
+
+        private bool rockTypeIsChecked;
+        public bool RockTypeIsChecked
+        {
+            get { return rockTypeIsChecked; }
+            set {
+                if (rockTypeIsChecked != value)
+                {
+                    rockTypeIsChecked = value;
+                    OnPropertyChanged(nameof(RockTypeIsChecked), SelectedReportInf.RockType);
                 }
             }
         }
@@ -89,7 +156,14 @@ namespace JonesWPF.ViewModels
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-                arr.Add(selectedReprotInf);
+                if (arr.Exists(arg => arg == selectedReprotInf))
+                {
+                    arr.Remove(selectedReprotInf);
+                }
+                else
+                {
+                    arr.Add(selectedReprotInf);
+                }   
             }
         }
 

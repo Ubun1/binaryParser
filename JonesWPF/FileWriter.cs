@@ -29,7 +29,7 @@ namespace JonesWPF
         static List<SelectedReportInf> Config;
 
         public static string SavingDirectory { get; set; }
-        
+
         public static void ConfigurateReport(List<SelectedReportInf> list)
         {
             Config = list;
@@ -43,22 +43,31 @@ namespace JonesWPF
 
         public static void Write(List<DataPoint[]> result)
         {
-            var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt");
+            var dataPoints = result.SelectMany(r => r.ToList());
+            var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.csv");
 
-            foreach (var column in result)
+            file.WriteLine(MakeHeaders());
+
+            foreach (var dataPoint in dataPoints)
             {
-                //TODO писать заголовки столбцов в зависимости от конфига
-                file.WriteLine("Time\tTemp\tX\tY");
-                foreach (var dataPoint in column)
-                {
-                    file.WriteLine(MakeString(dataPoint));
-                }
+                file.WriteLine(MakeLine(dataPoint));
             }
+
             file.WriteLine("endOfFile");
             file.Close();
         }
 
-        private static string MakeString(DataPoint dataPoint)
+        private static string MakeHeaders()
+        {
+            string result = "id;";
+            foreach (var columnHead in Config)
+            {
+                result += $"{columnHead};";
+            }
+            return result;
+        }
+
+        private static string MakeLine(DataPoint dataPoint)
         {
             string result = $"{dataPoint.Id};";
             foreach (var item in Config)
@@ -78,19 +87,19 @@ namespace JonesWPF
                         result += $"{dataPoint.Temperature};";
                         break;
                     case SelectedReportInf.Density:
-                        //result += $"{dataPoint.Y};";
+                        result += $"{dataPoint.Density};";
                         break;
                     case SelectedReportInf.Water:
-                        //result += $"{dataPoint.Y};";
+                        result += $"{dataPoint.WaterContent};";
                         break;
                     case SelectedReportInf.Viscosity:
-                        //result += $"{dataPoint.Y};";
+                        result += $"{dataPoint.Viscosity};";
                         break;
                     case SelectedReportInf.RelativeDeformation:
-                        //result += $"{dataPoint.Y};";
+                        result += $"{dataPoint.RelativeDeformation};";
                         break;
                     case SelectedReportInf.RockType:
-                        //result += $"{dataPoint.Y};";
+                        result += $"{dataPoint.RockType};";
                         break;
                     default:
                         break;
