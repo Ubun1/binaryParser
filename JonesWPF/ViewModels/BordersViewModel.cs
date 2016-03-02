@@ -65,7 +65,6 @@ namespace JonesWPF.ViewModels
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            //Debug.WriteLine($"{StartX},{EndX},{StartY},{EndY}");
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));

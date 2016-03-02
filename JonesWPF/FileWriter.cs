@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace JonesWPF
 {
     //TODO подумать над именами
-    enum SelectedReportInf
+    enum CheckBox
     {
         X,
         Y,
@@ -26,14 +26,14 @@ namespace JonesWPF
     static class FileWriter
     {
         static string outFileName;
-        static List<SelectedReportInf> Config;
+        static List<CheckBox> selectedCheckBoxes;
 
         public static string SavingDirectory { get; set; }
 
-        public static void ConfigurateReport(List<SelectedReportInf> list)
+        public static void ConfigurateReport(List<CheckBox> _selectedCheckBoxes)
         {
-            Config = list;
-            Config.Sort();
+            selectedCheckBoxes = _selectedCheckBoxes;
+            selectedCheckBoxes.Sort();
         }
 
         public static void SetOutFileName(string directory)
@@ -60,7 +60,7 @@ namespace JonesWPF
         private static string MakeHeaders()
         {
             string result = "id;";
-            foreach (var columnHead in Config)
+            foreach (var columnHead in selectedCheckBoxes)
             {
                 result += $"{columnHead};";
             }
@@ -70,35 +70,35 @@ namespace JonesWPF
         private static string MakeLine(DataPoint dataPoint)
         {
             string result = $"{dataPoint.Id};";
-            foreach (var item in Config)
+            foreach (var item in selectedCheckBoxes)
             {
                 switch (item)
                 {
-                    case SelectedReportInf.X:
+                    case CheckBox.X:
                         result += $"{dataPoint.X};";
                         break;
-                    case SelectedReportInf.Y:
+                    case CheckBox.Y:
                         result += $"{dataPoint.Y};";
                         break;
-                    case SelectedReportInf.Time:
+                    case CheckBox.Time:
                         result += $"{dataPoint.Time};";
                         break;
-                    case SelectedReportInf.Temp:
+                    case CheckBox.Temp:
                         result += $"{dataPoint.Temperature};";
                         break;
-                    case SelectedReportInf.Density:
+                    case CheckBox.Density:
                         result += $"{dataPoint.Density};";
                         break;
-                    case SelectedReportInf.Water:
+                    case CheckBox.Water:
                         result += $"{dataPoint.WaterContent};";
                         break;
-                    case SelectedReportInf.Viscosity:
+                    case CheckBox.Viscosity:
                         result += $"{dataPoint.Viscosity};";
                         break;
-                    case SelectedReportInf.RelativeDeformation:
+                    case CheckBox.RelativeDeformation:
                         result += $"{dataPoint.RelativeDeformation};";
                         break;
-                    case SelectedReportInf.RockType:
+                    case CheckBox.RockType:
                         result += $"{dataPoint.RockType};";
                         break;
                     default:

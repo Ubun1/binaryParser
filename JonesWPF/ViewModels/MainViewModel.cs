@@ -247,6 +247,8 @@ namespace JonesWPF.ViewModels
         {
             startButtEnable = false;
 
+            LogText = "Starting operation";
+
             tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
 
@@ -302,6 +304,7 @@ namespace JonesWPF.ViewModels
                 Column = Column.OrderBy(x => x.Id).ThenBy(x => x.Time).ToList();
                 FileWriter.Write(Analyzer.TwoHumps(Column));
             }
+            WorkComplited(true);
         }
 
         private void ProgressChanged(int progress, int id)
@@ -379,12 +382,22 @@ namespace JonesWPF.ViewModels
 
         private void WorkComplited(bool canseled)
         {
-            Action action = () =>
-            {
-                string message = canseled ? "\n:(" : "\n:)";
-                LogText += message;
-            };
-            DispatchService.Invoke(action);
+            //Action action = () =>
+            //{
+            //    string message = canseled ? "\n:(" : "\n:)";
+            //    LogText += message;
+            //};
+            //DispatchService.Invoke(action);
+
+            startButtEnable = true;
+
+            TotalCount = 0;
+            FirstThrdCount = 0;
+            SecondThrdCount = 0;
+            ThirdThrdCount = 0;
+            FourthThrdCount = 0;
+
+            MainTblk = "Operation complited. Select new model.";
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

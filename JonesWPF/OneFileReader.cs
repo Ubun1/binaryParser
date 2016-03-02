@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JonesWPF
 {
-    //one file Reader
+
     class OneFileReader
     {
         static int _startX, _endX, _startY, _endY;
@@ -21,11 +21,14 @@ namespace JonesWPF
             _endY = endY;
             Debug.WriteLine($"{_startX},{_endX},{_startY},{_endY}");
         }
+        private static bool IsInAnaliseWindow(int x, int y)
+        {
+            return x > _startX && x < _endX && y > _startY && y < _endY;
+        }
 
         List<DataPoint> column;
-        
-        int index = 4;
-        byte[] bytes;
+        BinaryReader binReader;
+
         long marknum;
         int time;
         readonly int workerID;
@@ -37,86 +40,47 @@ namespace JonesWPF
         }
 
         public List<DataPoint> Read(dynamic obj)
-        {
-            
+        {      
             string path = obj.Path;
             CancellationToken token = obj.Token;
 
             ProgressStarted(workerID, path);
-            //TODO вернуть рабочий код через binReader!
-            FastRead(path);
 
+            var stream = new FileStream(path, FileMode.Open);
+            binReader = new BinaryReader(stream);
             token.ThrowIfCancellationRequested();
 
             ReadInitialInf();
             ReadMarkersInf();
 
             ProgressEnded(workerID, path);
-           
-            return column;
-        }
 
-        private void FastRead(string path)
-        {
-            var file = new FileInfo(path);
-            var stream = new FileStream(path, FileMode.Open);
-            bytes = new byte[file.Length];
-            long numBytesToRead = file.Length;
-            int numBytesRead = 0;
-            while (numBytesToRead > 0)
-            {
-                // Read may return anything from 0 to numBytesToRead.
-                int n = stream.Read(bytes, numBytesRead, (int)numBytesToRead);
-
-                // Break when the end of the file is reached.
-                if (n == 0)
-                    break;
-
-                numBytesRead += n;
-                numBytesToRead -= n;
-            }
+            binReader.Close();
             stream.Close();
+
+            return column;
         }
 
         private void ReadInitialInf()
         {
-            
-            var xnumx = BitConverter.ToInt64(bytes, index);//  binReader.ReadInt64();
-            index += 8;
-            var ynumy = BitConverter.ToInt64(bytes, index);// binReader.ReadInt64();
-            index += 8;
-            var mnumx = BitConverter.ToInt64(bytes, index);// binReader.ReadInt64();
-            index += 8;
-            var mnumy = BitConverter.ToInt64(bytes, index); // binReader.ReadInt64();
-            index += 8;
-            marknum = BitConverter.ToInt64(bytes, index);// binReader.ReadInt64(); //количество маркеров
-            index += 8;
-            var xsize = BitConverter.ToDouble(bytes, index);// binReader.ReadDouble();
-            index += 8;
-            var ysize = BitConverter.ToDouble(bytes, index);// binReader.ReadDouble();
-            index += 8;
-            //var pinit = new double[5] { binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble() };
-            index += 8 * 5;
-            var gxkoef = BitConverter.ToDouble(bytes, index);// binReader.ReadDouble();
-            index += 8;
-            var gykoef = BitConverter.ToDouble(bytes, index);// binReader.ReadDouble();
-            index += 8;
-            var rocknum = BitConverter.ToInt32(bytes, index);// binReader.ReadInt32();
-            index += 4;
-            var bondnum = BitConverter.ToInt64(bytes, index);// binReader.ReadInt64();
-            index += 8;
-            var n1 = BitConverter.ToInt32(bytes, index);// binReader.ReadInt32();
-            index += 4;
-            time = (int)BitConverter.ToDouble(bytes, index);// binReader.ReadDouble();//время модели
-            index += 8;
+            var a = binReader.ReadInt32();
+            var xnumx = binReader.ReadInt64();
+            var ynumy =  binReader.ReadInt64();
+            var mnumx = binReader.ReadInt64();
+            var mnumy = binReader.ReadInt64();
+            marknum = binReader.ReadInt64(); //количество маркеров
+            var xsize = binReader.ReadDouble();
+            var ysize =  binReader.ReadDouble();
+            var pinit = new double[5] { binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble(), binReader.ReadDouble() };
+            var gxkoef =  binReader.ReadDouble();
+            var gykoef = binReader.ReadDouble();
+            var rocknum = binReader.ReadInt32();
+            var bondnum = binReader.ReadInt64();
+            var n1 = binReader.ReadInt32();
+            time = (int)binReader.ReadDouble();//время модели
             var nodenum = xnumx * ynumy;
-            index = (int)(4 + 2 * 4 + 16 * 8 + rocknum * (8 * 24 + 4) + 15 * 8 * nodenum + 4 * (xnumx + ynumy) + (bondnum - 1) * (16 + 3 * 8));
-
+            binReader.BaseStream.Position = (int)(4 + 2 * 4 + 16 * 8 + rocknum * (8 * 24 + 4) + 15 * 8 * nodenum + 4 * (xnumx + ynumy) + (bondnum - 1) * (16 + 3 * 8));
         }
-        /// <summary>
-        ///     В .prn файле начиная с позиции curpus0 
-        ///     считываются значения связанные с маркерами.
-        /// </summary>
         private void ReadMarkersInf()
         {
             for (long id = 0; id < marknum; id++)
@@ -124,22 +88,37 @@ namespace JonesWPF
                 int[] buffer = new int[9];
                 for (int innerIndex = 0; innerIndex < 9; innerIndex++)
                 {
-                    buffer[innerIndex] = (int)BitConverter.ToSingle(bytes, index);
-                    index += 4;
+                    buffer[innerIndex] = (int)binReader.ReadSingle();
                 }
-                index++;
 
+                int rockType = binReader.ReadByte();
                 int x = buffer[0];
                 int y = buffer[1];
                 int temperature = buffer[2];
+                int density = buffer[3];
+                int waterContent = buffer[4];
+                int viscosuty = buffer[7];
+                int relativeDeformation = buffer[8];
 
-                if (x > _startX && x < _endX && y > _startY && y < _endY)
+                if (IsInAnaliseWindow(x, y))
                 {
-                    column.Add(new DataPoint((int)id, temperature, (int)time, x, y));
+                    column.Add(new DataPoint()
+                    {
+                        Id = (int)id,
+                        X = x,
+                        Y = y,
+                        Temperature = temperature,
+                        Time = time,
+                        Density = density,
+                        RelativeDeformation = relativeDeformation,
+                        RockType = rockType,
+                        WaterContent = waterContent,
+                        Viscosity = viscosuty
+                    });
                 }
                 if (id % 1000000 == 0)
                 {
-                    int a =(int)(id / 28e6 * 100);
+                    int a = (int)(id / 28e6 * 100);
                     Debug.WriteLine($"{Task.CurrentId} id - {id}, {a}");
                     ProgressChanged((int)(id / 28e6 * 100), workerID);
                 }

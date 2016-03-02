@@ -11,13 +11,13 @@ namespace JonesWPF.ViewModels
     class ConfigurateOutputViewModel : INotifyPropertyChanged
     {
         //TODO подумать над именем этого массива!
-        List<SelectedReportInf> arr;
+        List<CheckBox> selectedCheckBoxes;
 
         public ICommand CloseCommand { get; set; }
 
         public ConfigurateOutputViewModel()
         {
-            arr = new List<SelectedReportInf>();
+            selectedCheckBoxes = new List<CheckBox>();
 
             CloseCommand = new RelayCommand(arg => CloseMethod());
         }
@@ -32,7 +32,7 @@ namespace JonesWPF.ViewModels
                 if (timeIsChecked != value)
                 {
                     timeIsChecked = value;
-                    OnPropertyChanged(nameof(TimeIsChecked), SelectedReportInf.Time);
+                    OnPropertyChanged(nameof(TimeIsChecked), CheckBox.Time);
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace JonesWPF.ViewModels
                 if (tempIsChecked != value)
                 {
                     tempIsChecked = value;
-                    OnPropertyChanged(nameof(TempIsChecked), SelectedReportInf.Temp);
+                    OnPropertyChanged(nameof(TempIsChecked), CheckBox.Temp);
                 }
             }
         }
@@ -58,7 +58,7 @@ namespace JonesWPF.ViewModels
                 if (xIsChecked != value)
                 {
                     xIsChecked = value;
-                    OnPropertyChanged(nameof(XIsChecked), SelectedReportInf.X);
+                    OnPropertyChanged(nameof(XIsChecked), CheckBox.X);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace JonesWPF.ViewModels
                 if (yIsChecked != value)
                 {
                     yIsChecked = value;
-                    OnPropertyChanged(nameof(YIsChecked), SelectedReportInf.Y);
+                    OnPropertyChanged(nameof(YIsChecked), CheckBox.Y);
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace JonesWPF.ViewModels
                 if (densityIsChecked != value)
                 {
                     densityIsChecked = value;
-                    OnPropertyChanged(nameof(DensityIsChecked), SelectedReportInf.Density);
+                    OnPropertyChanged(nameof(DensityIsChecked), CheckBox.Density);
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace JonesWPF.ViewModels
                 if (densityIsChecked != value)
                 {
                     waterContentIsChecked = value;
-                    OnPropertyChanged(nameof(WaterContentIsChecked), SelectedReportInf.Water);
+                    OnPropertyChanged(nameof(WaterContentIsChecked), CheckBox.Water);
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace JonesWPF.ViewModels
                 if (viscosityIsChecked != value)
                 {
                     viscosityIsChecked = value;
-                    OnPropertyChanged(nameof(ViscosityIsChecked), SelectedReportInf.Viscosity);
+                    OnPropertyChanged(nameof(ViscosityIsChecked), CheckBox.Viscosity);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace JonesWPF.ViewModels
                 if (relativeDefIsChecked != value)
                 {
                     relativeDefIsChecked = value;
-                    OnPropertyChanged(nameof(RelativeDefIsChecked), SelectedReportInf.RelativeDeformation);
+                    OnPropertyChanged(nameof(RelativeDefIsChecked), CheckBox.RelativeDeformation);
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace JonesWPF.ViewModels
                 if (rockTypeIsChecked != value)
                 {
                     rockTypeIsChecked = value;
-                    OnPropertyChanged(nameof(RockTypeIsChecked), SelectedReportInf.RockType);
+                    OnPropertyChanged(nameof(RockTypeIsChecked), CheckBox.RockType);
                 }
             }
         }
@@ -148,21 +148,21 @@ namespace JonesWPF.ViewModels
 
         private void CloseMethod()
         {
-            FileWriter.ConfigurateReport(arr);
+            FileWriter.ConfigurateReport(selectedCheckBoxes);
         }
 
-        private void OnPropertyChanged(string propertyName, SelectedReportInf selectedReprotInf)
+        private void OnPropertyChanged(string propertyName, CheckBox checkBox)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-                if (arr.Exists(arg => arg == selectedReprotInf))
+                if (selectedCheckBoxes.Exists(arg => arg == checkBox))
                 {
-                    arr.Remove(selectedReprotInf);
+                    selectedCheckBoxes.Remove(checkBox);
                 }
                 else
                 {
-                    arr.Add(selectedReprotInf);
+                    selectedCheckBoxes.Add(checkBox);
                 }   
             }
         }

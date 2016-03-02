@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JonesWPF.ViewModels"
-        Title="Select boundaries" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+        Title="Select boundaries" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Window.DataContext>
         <local:BordersViewModel/>
     </Window.DataContext>
