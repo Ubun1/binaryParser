@@ -94,7 +94,7 @@ namespace JonesWPF
                 int rockType = binReader.ReadByte();
                 int x = buffer[0];
                 int y = buffer[1];
-                int temperature = buffer[2];
+                int temperature = buffer[2] == 0 ? 273 : buffer[2];
                 int density = buffer[3];
                 int waterContent = buffer[4];
                 int viscosuty = buffer[7];

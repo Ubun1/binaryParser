@@ -149,6 +149,8 @@ namespace JonesWPF.ViewModels
         private void CloseMethod()
         {
             FileWriter.ConfigurateReport(selectedCheckBoxes);
+            var xmlConfig = new XmlConfigManger();
+            xmlConfig.AddInfToConfig(selectedCheckBoxes);
         }
 
         private void OnPropertyChanged(string propertyName, CheckBox checkBox)
@@ -166,7 +168,6 @@ namespace JonesWPF.ViewModels
                 }   
             }
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
