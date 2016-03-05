@@ -19,6 +19,7 @@ namespace JonesWPF.ViewModels
         public ICommand SaveToCommand { get; set; }
         public ICommand SelectBoundaries { get; set; }
         public ICommand ConfigOutCommand { get; set; }
+        public ICommand CloseCommand { get; set; }
 
         #region PropsForUI
         private string mainTblk;
@@ -34,7 +35,7 @@ namespace JonesWPF.ViewModels
             }
         }
 
-        private bool startButtEnable;
+        private bool startButtEnable = false;
 
         private int totalCount;
         public int TotalCount
@@ -178,7 +179,7 @@ namespace JonesWPF.ViewModels
 
         #endregion
 
-        FolderBrowserDialog folderBrowser;
+        FolderBrowserDialog loadFolderBrowser, saveFolderBrowser;
         CancellationTokenSource tokenSource;
         List<DataPoint> Column;
         List<string> directories;
@@ -187,25 +188,28 @@ namespace JonesWPF.ViewModels
         {
             Initialize();
 
-            StartCommand = new RelayCommand(arg => StartMethod(), arg => startButtEnable);
+            StartCommand = new RelayCommand(arg => StartMethod(), arg => true);
             OpenCommand = new RelayCommand(arg => OpenMethod());
             CancelCommand = new RelayCommand(arg => CancelMethod());
             SaveToCommand = new RelayCommand(arg => SaveToMethod(), arg => directories == null ? false : true);
             SelectBoundaries = new RelayCommand(arg => SelectBoundariesMethod());
             ConfigOutCommand = new RelayCommand(arg => ConfigOutMethod());
+            CloseCommand = new RelayCommand(arg => CloseMethod());
         }
 
         private void Initialize()
         {
-            folderBrowser = new FolderBrowserDialog();
+            //loadFolderBrowser = new FolderBrowserDialog();
             Column = new List<DataPoint>();
         }
 
         private void OpenMethod()
         {
-            if (folderBrowser.ShowDialog().ToString() == "OK")
+            loadFolderBrowser = new FolderBrowserDialog();
+            loadFolderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
+            if (loadFolderBrowser.ShowDialog().ToString() == "OK")
             {
-                directories = FolderManager.GetFilesPaths(folderBrowser.SelectedPath);
+                directories = FolderManager.GetFilesPaths(loadFolderBrowser.SelectedPath);
                 LogText += "Selected directories\n";
                 foreach (var directory in directories)
                 {
@@ -223,9 +227,11 @@ namespace JonesWPF.ViewModels
 
         private void SaveToMethod()
         {
-            if (folderBrowser.ShowDialog().ToString() == "OK")
+            saveFolderBrowser = new FolderBrowserDialog();
+            saveFolderBrowser.RootFolder = Environment.SpecialFolder.Desktop;
+            if (saveFolderBrowser.ShowDialog().ToString() == "OK")
             {
-                FileWriter.SavingDirectory = folderBrowser.SelectedPath;
+                FileWriter.SavingDirectory = saveFolderBrowser.SelectedPath;
                 LogText += $"{FileWriter.SavingDirectory} folder is choozed for saving..\n";
                 startButtEnable = true;
             }
@@ -260,10 +266,10 @@ namespace JonesWPF.ViewModels
                 FileWriter.SetOutFileName(directory);
                 var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
-                for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 1)
+                for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 4)
                 {
                     var tasks = new List<Task<List<DataPoint>>>();
-                    for (int innerPathCount = 0; innerPathCount < 1; innerPathCount++)
+                    for (int innerPathCount = 0; innerPathCount < 4; innerPathCount++)
                     {
                         if (outerPathCount + innerPathCount >= filePaths.Count)
                         {
@@ -305,6 +311,11 @@ namespace JonesWPF.ViewModels
                 FileWriter.Write(Analyzer.TwoHumps(Column));
             }
             WorkComplited(true);
+        }
+
+        private void CloseMethod()
+        {
+            XmlConfigManger.SaveConfig();
         }
 
         private void ProgressChanged(int progress, int id)

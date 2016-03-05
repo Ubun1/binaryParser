@@ -9,72 +9,105 @@ using System.Threading.Tasks;
 
 namespace JonesWPF
 {
-    interface IConfiguratable
+    enum InitialPaths
     {
-        void AddInfToConfig(string loadPath, string savePath);
-        void AddInfToConfig(List<CheckBox> selectedCheckBoxes);
-        void ReadInitialPathLoad();
-        void ReadInitialPathSave();
+        SavePath,
+        LoadPath
     }
-
-    class XmlConfigManger : IConfiguratable
+    static class XmlConfigManger
     {
-        string fileName;
-        XDocument configDoc;
-        FileStream stream;
+        static string fileName;
+        static XDocument configDoc;
+        static XElement checkBoxElement;
+        static XElement pathsElement;
 
-        public XmlConfigManger()
+        static XmlConfigManger()
         {
-            fileName = "cofig.xml";
+            fileName = "config.xml";
 
-            //InitializeConfig();
-        }
-
-        private void InitializeConfig()
-        {
-            if (File.Exists(fileName))
-            {
-                stream = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite);
-                configDoc = XDocument.Load(stream);
-            }
-            else
-            {
-                stream = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-                configDoc = new XDocument();
-            }
-        }
-
-        public void AddInfToConfig(List<CheckBox> selectedCheckBoxes)
-        {
             InitializeConfig();
-            var xElement = new XElement("CheckBoxes");
+        }
 
-            configDoc.Descendants().Where(e => e.Name == "CheckBox").Remove();
+        public static void AddInfToConfig(List<CheckBox> selectedCheckBoxes)
+        {
+            DeleteOldNodes("CheckBoxes");
+
+            checkBoxElement = new XElement("CheckBoxes");
 
             foreach (var checkBox in selectedCheckBoxes)
             {
-                xElement.Add(new XElement("CheckBox", $"{checkBox}"));           
+                checkBoxElement.Add(new XElement("CheckBox", $"{(int)checkBox}"));
             }
 
-            configDoc.Add(xElement);
+            configDoc.Add(checkBoxElement);
             Debug.WriteLine(configDoc);
-            configDoc.Save(stream);
-            stream.Close();
         }
 
-        public void AddInfToConfig(string loadPath, string savePath)
+        public static void AddInfToConfig(string loadPath, string savePath)
         {
-            throw new NotImplementedException();
+            DeleteOldNodes("Paths");
+            pathsElement = new XElement("Paths");
+            pathsElement.Add(
+                new XElement("LoadPath", $"{loadPath}"),
+                new XElement("SavePath", $"{savePath}")
+                );
+            configDoc.Add(pathsElement);
         }
 
-        public void ReadInitialPathLoad()
+        public static string ReadInitialPath(InitialPaths initialPaths)
         {
-            throw new NotImplementedException();
+            var result = @"C:\";
+
+            if (configDoc.Element("Paths") == null)
+            {
+                return result;
+            }
+            result = configDoc.Element("Paths").Element($"{initialPaths}").Value;
+            return result;
+        }
+      
+        public static List<CheckBox> ReadInitialCheckBoxes()
+        {
+            var result = new List<CheckBox>();
+
+            if (configDoc.Element("CheckBoxes") == null)
+            {
+                return result;
+            }
+
+            foreach (var node in configDoc.Element("CheckBoxes").Elements("CheckBox"))
+            {
+                result.Add((CheckBox)int.Parse(node.Value));
+            }
+
+            return result;
         }
 
-        public void ReadInitialPathSave()
+        public static void SaveConfig()
         {
-            throw new NotImplementedException();
+            configDoc.Save(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite));
         }
+
+        private static void InitializeConfig()
+        {
+            if (File.Exists(fileName))
+            {
+                var stream = new FileStream(fileName, FileMode.Open, FileAccess.ReadWrite);
+                configDoc = XDocument.Load(stream);
+                stream.Close();
+            }
+            else
+            {
+                configDoc = new XDocument();
+            }
+        }
+        private static void DeleteOldNodes(string node)
+        {
+            if (configDoc.Element(node) != null)
+            {
+                configDoc.Element(node).Remove();
+            }
+        }
+
     }
 }

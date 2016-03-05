@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace JonesWPF
 {
-    //TODO подумать над именами
     enum CheckBox
     {
         X,

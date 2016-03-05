@@ -10,15 +10,14 @@ namespace JonesWPF.ViewModels
 {
     class ConfigurateOutputViewModel : INotifyPropertyChanged
     {
-        //TODO подумать над именем этого массива!
         List<CheckBox> selectedCheckBoxes;
 
         public ICommand CloseCommand { get; set; }
+        public ICommand LoadedCommand { get; set; }
 
         public ConfigurateOutputViewModel()
         {
-            selectedCheckBoxes = new List<CheckBox>();
-
+            Initialize();
             CloseCommand = new RelayCommand(arg => CloseMethod());
         }
 
@@ -95,7 +94,7 @@ namespace JonesWPF.ViewModels
         {
             get { return waterContentIsChecked; }
             set {
-                if (densityIsChecked != value)
+                if (waterContentIsChecked != value)
                 {
                     waterContentIsChecked = value;
                     OnPropertyChanged(nameof(WaterContentIsChecked), CheckBox.Water);
@@ -149,8 +148,22 @@ namespace JonesWPF.ViewModels
         private void CloseMethod()
         {
             FileWriter.ConfigurateReport(selectedCheckBoxes);
-            var xmlConfig = new XmlConfigManger();
-            xmlConfig.AddInfToConfig(selectedCheckBoxes);
+            XmlConfigManger.AddInfToConfig(selectedCheckBoxes);
+        }
+
+        private void Initialize()
+        {
+            selectedCheckBoxes = XmlConfigManger.ReadInitialCheckBoxes();
+
+            timeIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Time);
+            tempIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Temp);
+            xIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.X);
+            yIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Y);
+            waterContentIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Water);
+            viscosityIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Viscosity);
+            densityIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Density);
+            rockTypeIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.RockType);
+            relativeDefIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.RelativeDeformation);
         }
 
         private void OnPropertyChanged(string propertyName, CheckBox checkBox)
