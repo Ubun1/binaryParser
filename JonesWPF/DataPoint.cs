@@ -1,6 +1,6 @@
 ﻿namespace JonesWPF
 {
-    class DataPoint
+    public class DataPoint
     {
         public int Id { get; set; }
         public int X { get; set; }

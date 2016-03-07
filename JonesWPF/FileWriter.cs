@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JonesWPF
 {
-    enum CheckBox
+    public enum CheckBox
     {
         X,
         Y,
@@ -22,7 +22,7 @@ namespace JonesWPF
         Default
     }
 
-    static class FileWriter
+    public static class FileWriter
     {
         static string outFileName;
         static List<CheckBox> selectedCheckBoxes;
@@ -42,14 +42,17 @@ namespace JonesWPF
 
         public static void Write(List<DataPoint[]> result)
         {
-            var dataPoints = result.SelectMany(r => r.ToList());
+            //var dataPoints = result.SelectMany(r => r.ToList());
             var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.csv");
 
             file.WriteLine(MakeHeaders());
 
-            foreach (var dataPoint in dataPoints)
+            foreach (var dataPoints in result)
             {
-                file.WriteLine(MakeLine(dataPoint));
+                foreach (var dataPoint in dataPoints)
+                {
+                    file.WriteLine(MakeLine(dataPoint));
+                }
             }
 
             file.WriteLine("endOfFile");

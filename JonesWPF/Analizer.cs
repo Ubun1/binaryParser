@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JonesWPF
 {
-    static class Analyzer
+    public static class Analyzer
     {
         public static List<DataPoint[]> TwoHumps(List<DataPoint> column)
         {
