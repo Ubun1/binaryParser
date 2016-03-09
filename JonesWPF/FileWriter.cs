@@ -27,23 +27,36 @@ namespace JonesWPF
         static string outFileName;
         static List<CheckBox> selectedCheckBoxes;
 
-        public static string SavingDirectory { get; set; }
+        private static string savingDirectory;
+
+        public static string SavingDirectory
+        {
+            get { return savingDirectory; }
+            set
+            {
+                savingDirectory = value;
+                SomethingChanged($"Saving directory {savingDirectory}");
+            }
+        }
+
 
         public static void ConfigurateReport(List<CheckBox> _selectedCheckBoxes)
         {
             selectedCheckBoxes = _selectedCheckBoxes;
             selectedCheckBoxes.Sort();
+            SomethingChanged($"Report configurated, selected {_selectedCheckBoxes.Count}");
         }
 
         public static void SetOutFileName(string directory)
         {
             outFileName = directory.Split(new char[] { '\\' }).Last();
+            SomethingChanged($"OutFileName selected - {outFileName}");
         }
 
         public static void Write(List<DataPoint[]> result)
         {
             //var dataPoints = result.SelectMany(r => r.ToList());
-            var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.csv");
+            var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt");
 
             file.WriteLine(MakeHeaders());
 
@@ -55,6 +68,7 @@ namespace JonesWPF
                 }
             }
 
+            SomethingChanged($"file write complite");
             file.WriteLine("endOfFile");
             file.Close();
         }
@@ -109,5 +123,7 @@ namespace JonesWPF
             }
             return result;
         }
+
+        public static event Action<string> SomethingChanged;
     }
 }

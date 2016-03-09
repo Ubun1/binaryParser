@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System;
 using System.Collections.Generic;
 
 namespace JonesWPF
@@ -71,7 +72,10 @@ namespace JonesWPF
                     thirdTroughtReached = true;
                 }
             }
+            SomethingChanged($"Analize complite, result count = {output.Count}");
             return output;
         }
+
+        public static event Action<string> SomethingChanged;
     }
 }

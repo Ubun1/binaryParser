@@ -12,17 +12,6 @@
         public int WaterContent { get; set; }
         public int Viscosity { get; set; }
         public int RelativeDeformation { get; set; }
-
-        public DataPoint()
-        { }
-        public DataPoint(int id, int temperature, int time, int x, int y)
-        {
-            Id = id;
-            Temperature = temperature;
-            Time = time;
-            X = x;
-            Y = y;
-        }
     }
 }
 

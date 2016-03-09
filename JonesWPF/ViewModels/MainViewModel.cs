@@ -50,7 +50,12 @@ namespace JonesWPF.ViewModels
                 }
             }
         }
+        
 
+        private void logTextEventHandler(string message)
+        {
+            LogText += message;
+        }
         private string logText;
         public string LogText
         {
@@ -59,11 +64,12 @@ namespace JonesWPF.ViewModels
             {
                 if (logText != value)
                 {
-                    logText = value;
+                    logText = value + "\n";
                     OnPropertyChanged("LogText");
                 }
             }
         }
+
 
         private int firstThrdCount;
         public int FirstThrdCount
@@ -201,6 +207,10 @@ namespace JonesWPF.ViewModels
         {
             //loadFolderBrowser = new FolderBrowserDialog();
             Column = new List<DataPoint>();
+
+            FileWriter.SomethingChanged += logTextEventHandler;
+            Analyzer.SomethingChanged += logTextEventHandler;
+            XmlConfigManger.SomethingChanged += logTextEventHandler;
         }
 
         private void OpenMethod()
@@ -210,10 +220,10 @@ namespace JonesWPF.ViewModels
             if (loadFolderBrowser.ShowDialog().ToString() == "OK")
             {
                 directories = FolderManager.GetFilesPaths(loadFolderBrowser.SelectedPath);
-                LogText += "Selected directories\n";
+                LogText += "Selected directories";
                 foreach (var directory in directories)
                 {
-                    LogText += directory.ToString() + "\n";
+                    LogText += directory.ToString();
                 } 
             }
         }
@@ -232,7 +242,7 @@ namespace JonesWPF.ViewModels
             if (saveFolderBrowser.ShowDialog().ToString() == "OK")
             {
                 FileWriter.SavingDirectory = saveFolderBrowser.SelectedPath;
-                LogText += $"{FileWriter.SavingDirectory} folder is choozed for saving..\n";
+                LogText += $"{FileWriter.SavingDirectory} folder is choozed for saving..";
                 startButtEnable = true;
             }
         }
@@ -254,6 +264,8 @@ namespace JonesWPF.ViewModels
             startButtEnable = false;
 
             LogText = "Starting operation";
+
+
 
             tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
@@ -346,19 +358,19 @@ namespace JonesWPF.ViewModels
             {
                 case 0:
                     DispatchService.Invoke(() => FirstTblk = name);
-                    LogText += $"Started {name} ...\n";
+                    LogText += $"Started {name} ...";
                     break;
                 case 1:
                     DispatchService.Invoke(() => SecondTblk = name);
-                    LogText += $"Started {name} ...\n"; 
+                    LogText += $"Started {name} ..."; 
                     break;
                 case 2:
                     DispatchService.Invoke(() => ThirdTblk = name);
-                    LogText += $"Started {name} ...\n";
+                    LogText += $"Started {name} ...";
                     break;
                 case 3:
                     DispatchService.Invoke(() => FouthTblk = name);
-                    LogText += $"Started {name} ...\n"; 
+                    LogText += $"Started {name} ..."; 
                     break;
                 default:
                     break;
@@ -372,19 +384,19 @@ namespace JonesWPF.ViewModels
             {
                 case 0:
                     DispatchService.Invoke(() => FirstTblk = name);
-                    LogText += $"{name}\n";
+                    LogText += $"{name}";
                     break;
                 case 1:
                     DispatchService.Invoke(() => SecondTblk = name);
-                    LogText += $"{name}\n";
+                    LogText += $"{name}";
                     break;
                 case 2:
                     DispatchService.Invoke(() => ThirdTblk = name);
-                    LogText += $"{name}\n";
+                    LogText += $"{name}";
                     break;
                 case 3:
                     DispatchService.Invoke(() => FouthTblk = name);
-                    LogText += $"{name}\n";
+                    LogText += $"{name}";
                     break;
                 default:
                     break;

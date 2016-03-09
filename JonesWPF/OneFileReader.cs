@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace JonesWPF
 {
-
+    //TODO Баги - столбцы для вывода сохраняются только если вызывать соответствующее окно.
     class OneFileReader
     {
+        //TODO Допилить выбор из этого окна. Он положил мне весь анализ.
         static int _startX, _endX, _startY, _endY;
         public static void SetBorders(int startX = 2300, int endX = 2900, int startY = 0, int endY = 75)
         {
@@ -21,9 +22,9 @@ namespace JonesWPF
             _endY = endY;
             Debug.WriteLine($"{_startX},{_endX},{_startY},{_endY}");
         }
-        private static bool IsInAnaliseWindow(int x, int y)
+        private bool IsInAnaliseWindow(int x, int y)
         {
-            return x > _startX && x < _endX && y > _startY && y < _endY;
+            return x > 2400000 && x < 2900000 && y > 0 && y < 20000;
         }
 
         List<DataPoint> column;
@@ -118,8 +119,8 @@ namespace JonesWPF
                 }
                 if (id % 1000000 == 0)
                 {
+                    Debug.WriteLine($"{x},{y}");
                     int a = (int)(id / 28e6 * 100);
-                    Debug.WriteLine($"{Task.CurrentId} id - {id}, {a}");
                     ProgressChanged((int)(id / 28e6 * 100), workerID);
                 }
             }

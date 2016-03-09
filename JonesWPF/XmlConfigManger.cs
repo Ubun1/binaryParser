@@ -40,30 +40,8 @@ namespace JonesWPF
             }
 
             configDoc.Add(checkBoxElement);
+            SomethingChanged($"CheckBoxes - {selectedCheckBoxes.Count} added to config");
             Debug.WriteLine(configDoc);
-        }
-
-        public static void AddInfToConfig(string loadPath, string savePath)
-        {
-            DeleteOldNodes("Paths");
-            pathsElement = new XElement("Paths");
-            pathsElement.Add(
-                new XElement("LoadPath", $"{loadPath}"),
-                new XElement("SavePath", $"{savePath}")
-                );
-            configDoc.Add(pathsElement);
-        }
-
-        public static string ReadInitialPath(InitialPaths initialPaths)
-        {
-            var result = @"C:\";
-
-            if (configDoc.Element("Paths") == null)
-            {
-                return result;
-            }
-            result = configDoc.Element("Paths").Element($"{initialPaths}").Value;
-            return result;
         }
       
         public static List<CheckBox> ReadInitialCheckBoxes()
@@ -80,13 +58,17 @@ namespace JonesWPF
                 result.Add((CheckBox)int.Parse(node.Value));
             }
 
+            SomethingChanged($"Inf from config readed, selected {result.Count} CheckBoxes");
             return result;
         }
 
         public static void SaveConfig()
         {
             configDoc.Save(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite));
+            SomethingChanged($"Config saved");
         }
+
+        public static event Action<string> SomethingChanged;
 
         private static void InitializeConfig()
         {
