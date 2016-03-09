@@ -278,10 +278,10 @@ namespace JonesWPF.ViewModels
                 FileWriter.SetOutFileName(directory);
                 var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
-                for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 4)
+                for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 1)
                 {
                     var tasks = new List<Task<List<DataPoint>>>();
-                    for (int innerPathCount = 0; innerPathCount < 4; innerPathCount++)
+                    for (int innerPathCount = 0; innerPathCount < 1; innerPathCount++)
                     {
                         if (outerPathCount + innerPathCount >= filePaths.Count)
                         {

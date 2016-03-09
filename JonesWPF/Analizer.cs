@@ -17,6 +17,7 @@ namespace JonesWPF
             bool secondtroughtreached = false;
             bool secondhumpreached = false;
             bool thirdTroughtReached = false;
+            bool firstIter = false;
             int startMarker = 0;
             int endMarker = 0;
 
@@ -35,6 +36,7 @@ namespace JonesWPF
                     secondhumpreached = false;
                     secondtroughtreached = false;
                     thirdTroughtReached = false;
+                    firstIter = false;
                     startMarker = i;
                     endMarker = i;
                 }
@@ -43,10 +45,11 @@ namespace JonesWPF
                 if (!firsttroughtreached &&
                     point.Temperature < tempCurie)
                 {
+                    firstIter = true;
                     continue;
                 }
                 //первый +
-                if (!firsthumpreached &&
+                if (!firsthumpreached && firstIter &&
                     point.Temperature > tempCurie)
                 {
                     firsttroughtreached = true;

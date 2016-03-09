@@ -24,7 +24,7 @@ namespace JonesWPF
         }
         private bool IsInAnaliseWindow(int x, int y)
         {
-            return x > 2400000 && x < 2900000 && y > 0 && y < 20000;
+            return x > 2500000 && x < 2800000 && y > 0 && y < 20000;
         }
 
         List<DataPoint> column;
