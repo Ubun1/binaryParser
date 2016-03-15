@@ -5,6 +5,11 @@ using System.Collections.Generic;
 
 namespace JonesWPF.Analiser
 {
+    interface IAnalisible
+    {
+        IEnumerable<DataPoint> Analise(List<DataPoint> datapoints);
+    }
+
     public class Analyzer
     {
         public static List<DataPoint[]> TwoHumps(List<DataPoint> column)
@@ -82,7 +87,7 @@ namespace JonesWPF.Analiser
         public static event Action<string> SomethingChanged;
     }
 
-    public class ViscouseRemanentMagnet
+    public class ViscouseRemanentMagnet : IAnalisible
     {
         #region SingletonRealisation
         static ViscouseRemanentMagnet uniqueObj;
@@ -104,11 +109,12 @@ namespace JonesWPF.Analiser
         double totalSquare = 0;
         bool IsAnaliseComplite = false;
 
-        List<DataPoint> output = new List<DataPoint>();
-        List<DataPoint> dpsWithSameIds = new List<DataPoint>();
+        List<DataPoint> output;
+        List<DataPoint> dpsWithSameIds;
 
-        public void Analise(List<DataPoint> datapoints)
+        public IEnumerable<DataPoint> Analise(List<DataPoint> datapoints)
         {
+            output = new List<DataPoint>();
             for (int curIndex = 1; curIndex < datapoints.Count; curIndex++)
             {
                 var curDataPoint = datapoints[curIndex];
@@ -126,6 +132,7 @@ namespace JonesWPF.Analiser
                 dpsWithSameIds.Add(curDataPoint);
                 IsAnaliseComplite = ViscouseRemamentAnalise(out totalSquare, curDataPoint, prevDatapoint);
             }
+            return output as IEnumerable<DataPoint>;
         }
 
         private void SetDefaults()
