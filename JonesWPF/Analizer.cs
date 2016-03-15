@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
-namespace JonesWPF
+namespace JonesWPF.Analiser
 {
-    public static class Analyzer
+    public class Analyzer
     {
         public static List<DataPoint[]> TwoHumps(List<DataPoint> column)
         {
@@ -78,7 +79,69 @@ namespace JonesWPF
             SomethingChanged($"Analize complite, result count = {output.Count}");
             return output;
         }
-
         public static event Action<string> SomethingChanged;
+    }
+
+    public class ViscouseRemanentMagnet
+    {
+        #region SingletonRealisation
+        static ViscouseRemanentMagnet uniqueObj;
+
+        public static ViscouseRemanentMagnet Instance()
+        {
+            if (uniqueObj == null)
+            {
+                uniqueObj = new ViscouseRemanentMagnet();
+                return uniqueObj;
+            }
+            return uniqueObj;
+        }
+
+        private ViscouseRemanentMagnet()
+        { }
+        #endregion
+
+        double totalSquare = 0;
+        bool IsAnaliseComplite = false;
+
+        List<DataPoint> output = new List<DataPoint>();
+        List<DataPoint> dpsWithSameIds = new List<DataPoint>();
+
+        public void Analise(List<DataPoint> datapoints)
+        {
+            for (int curIndex = 1; curIndex < datapoints.Count; curIndex++)
+            {
+                var curDataPoint = datapoints[curIndex];
+                var prevDatapoint = datapoints[curIndex - 1];
+
+                if (curDataPoint.Id != prevDatapoint.Id)
+                {
+                    if (IsAnaliseComplite)
+                    {
+                        output.AddRange(dpsWithSameIds);
+                    }
+                    SetDefaults();
+                    curIndex++;
+                }
+                dpsWithSameIds.Add(curDataPoint);
+                IsAnaliseComplite = ViscouseRemamentAnalise(out totalSquare, curDataPoint, prevDatapoint);
+            }
+        }
+
+        private void SetDefaults()
+        {
+            totalSquare = 0;
+            IsAnaliseComplite = false;
+            dpsWithSameIds = new List<DataPoint>();
+        }
+
+        private bool ViscouseRemamentAnalise(out double totalSquare, DataPoint curDatapoint, DataPoint prevDataPoint)
+        {
+            //critcalSquare = TempCur * Lm (10^10 * (timeAtTempCur = 1))
+            double criticalSquare = 19780;
+            long timeInterval = curDatapoint.Time - prevDataPoint.Time;
+            totalSquare = curDatapoint.Temperature * Math.Log(10e10 * timeInterval);
+            return totalSquare / criticalSquare > 2;
+        }
     }
 }

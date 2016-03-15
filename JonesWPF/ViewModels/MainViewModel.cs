@@ -265,8 +265,6 @@ namespace JonesWPF.ViewModels
 
             LogText = "Starting operation";
 
-
-
             tokenSource = new CancellationTokenSource();
             CancellationToken token = tokenSource.Token;
 

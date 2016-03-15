@@ -14,6 +14,7 @@ namespace JonesWPF
         SavePath,
         LoadPath
     }
+
     static class XmlConfigManger
     {
         static string fileName;

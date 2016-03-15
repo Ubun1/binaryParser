@@ -100,7 +100,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Analizer.cs" />
-    <Compile Include="Observer.cs" />
     <Compile Include="ViewModels\BordersViewModel.cs" />
     <Compile Include="ViewModels\ConfigurateOutputViewModel.cs" />
     <Compile Include="View\BordersForAnalyseView.xaml.cs">
