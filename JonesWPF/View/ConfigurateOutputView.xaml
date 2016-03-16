@@ -29,5 +29,6 @@
         <CheckBox Content="Viscosity" IsChecked="{Binding Path=ViscosityIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Relative deformation" IsChecked="{Binding Path=RelativeDefIsChecked, Mode=TwoWay}"/>
         <CheckBox Content="Rock type" IsChecked="{Binding Path=RockTypeIsChecked, Mode=TwoWay}"/>
+        <CheckBox Content="VRM total" IsChecked="{Binding Path=VRMisChecked, Mode=TwoWay}"/>
     </StackPanel>
 </Window>

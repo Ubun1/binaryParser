@@ -12,6 +12,7 @@
         public int WaterContent { get; set; }
         public int Viscosity { get; set; }
         public int RelativeDeformation { get; set; }
+        public int VRM { get; set; }
     }
 }
 

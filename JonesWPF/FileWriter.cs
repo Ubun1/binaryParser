@@ -19,6 +19,7 @@ namespace JonesWPF
         Viscosity,
         RelativeDeformation,
         RockType,
+        VRMtotal,
         Default
     }
 
@@ -53,19 +54,15 @@ namespace JonesWPF
             SomethingChanged($"OutFileName selected - {outFileName}");
         }
 
-        public static void Write(List<DataPoint[]> result)
+        public static void Write(IEnumerable<DataPoint> datapoints)
         {
-            //var dataPoints = result.SelectMany(r => r.ToList());
             var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt");
 
             file.WriteLine(MakeHeaders());
 
-            foreach (var dataPoints in result)
+            foreach (var datapoint in datapoints)
             {
-                foreach (var dataPoint in dataPoints)
-                {
-                    file.WriteLine(MakeLine(dataPoint));
-                }
+                file.WriteLine(MakeLine(datapoint));
             }
 
             SomethingChanged($"file write complite");
@@ -116,6 +113,9 @@ namespace JonesWPF
                         break;
                     case CheckBox.RockType:
                         result += $"{dataPoint.RockType};";
+                        break;
+                    case CheckBox.VRMtotal:
+                        result += $"{dataPoint.VRM};";
                         break;
                     default:
                         break;

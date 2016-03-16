@@ -143,6 +143,20 @@ namespace JonesWPF.ViewModels
             }
         }
 
+        private bool vrmIsChecked;
+        public bool VRMisChecked
+        {
+            get { return vrmIsChecked; }
+            set {
+                if (vrmIsChecked != value)
+                {
+                    vrmIsChecked = value;
+                    OnPropertyChanged(nameof(VRMisChecked), CheckBox.VRMtotal);
+                }
+            }
+        }
+
+
         #endregion
 
         private void CloseMethod()
@@ -164,6 +178,7 @@ namespace JonesWPF.ViewModels
             densityIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.Density);
             rockTypeIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.RockType);
             relativeDefIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.RelativeDeformation);
+            vrmIsChecked = selectedCheckBoxes.Exists(arg => arg == CheckBox.VRMtotal);
         }
 
         private void OnPropertyChanged(string propertyName, CheckBox checkBox)

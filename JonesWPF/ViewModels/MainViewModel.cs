@@ -273,7 +273,6 @@ namespace JonesWPF.ViewModels
                 MainTblk = directory.Split(new char[] { '\\' }).Last();
                 TotalCount = 0;
 
-                FileWriter.SetOutFileName(directory);
                 var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
                 for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 1)
@@ -306,7 +305,7 @@ namespace JonesWPF.ViewModels
                             Column = Column.Concat(item).ToList();
                         }
 
-                        TotalCount = (outerPathCount) * 100 / filePaths.Count;
+                        TotalCount = (outerPathCount + 1) * 100 / (filePaths.Count + 1);
                     }
                     catch (OperationCanceledException)
                     {
@@ -317,8 +316,15 @@ namespace JonesWPF.ViewModels
                         LogText += "\n" + ex.Message;
                     }
                 }
-                //FileWriter.Write(Analyzer.TwoHumps(Column));
+                FileWriter.SetOutFileName(directory + "_TH");
+                Analyser.Analyser twoHumpsAnalyser = Analyser.TwoHumps.Instance();
+                FileWriter.Write(twoHumpsAnalyser.doAnalyse(Column));
+
+                FileWriter.SetOutFileName(directory + "_VRM");
+                Analyser.ViscouseRemanentMagnet vrmAnalyser = Analyser.ViscouseRemanentMagnet.Instance();
+                FileWriter.Write(vrmAnalyser.doAnalyse(Column));
             }
+
             WorkComplited(true);
         }
 

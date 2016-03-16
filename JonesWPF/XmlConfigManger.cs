@@ -20,7 +20,6 @@ namespace JonesWPF
         static string fileName;
         static XDocument configDoc;
         static XElement checkBoxElement;
-        static XElement pathsElement;
 
         static XmlConfigManger()
         {
