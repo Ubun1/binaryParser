@@ -59,7 +59,8 @@ namespace JonesWPF
             binReader.Close();
             stream.Close();
 
-            return column;
+            var rand = new Random();
+            return column.OrderBy(arg => rand.Next()).Take(150000).ToList();
         }
 
         private void ReadInitialInf()

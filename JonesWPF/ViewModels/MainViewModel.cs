@@ -306,7 +306,7 @@ namespace JonesWPF.ViewModels
                             Column = Column.Concat(item).ToList();
                         }
 
-                        TotalCount = (outerPathCount + 4) * 100 / filePaths.Count;
+                        TotalCount = (outerPathCount) * 100 / filePaths.Count;
                     }
                     catch (OperationCanceledException)
                     {
