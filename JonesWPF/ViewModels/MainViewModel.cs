@@ -209,7 +209,7 @@ namespace JonesWPF.ViewModels
             Column = new List<DataPoint>();
 
             FileWriter.SomethingChanged += logTextEventHandler;
-            Analyzer.SomethingChanged += logTextEventHandler;
+            //Analyzer.SomethingChanged += logTextEventHandler;
             XmlConfigManger.SomethingChanged += logTextEventHandler;
         }
 
@@ -317,8 +317,7 @@ namespace JonesWPF.ViewModels
                         LogText += "\n" + ex.Message;
                     }
                 }
-                Column = Column.OrderBy(x => x.Id).ThenBy(x => x.Time).ToList();
-                FileWriter.Write(Analyzer.TwoHumps(Column));
+                //FileWriter.Write(Analyzer.TwoHumps(Column));
             }
             WorkComplited(true);
         }

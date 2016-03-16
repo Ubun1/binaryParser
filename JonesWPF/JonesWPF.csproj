@@ -95,11 +95,13 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="ViewModels\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Analizer.cs" />
+    <Compile Include="Analyser\Analyser.cs" />
+    <Compile Include="Analyser\TwoHumpsAnalyser.cs" />
+    <Compile Include="Analyser\ViscouseRemanentMagnet.cs" />
     <Compile Include="ViewModels\BordersViewModel.cs" />
     <Compile Include="ViewModels\ConfigurateOutputViewModel.cs" />
     <Compile Include="View\BordersForAnalyseView.xaml.cs">
@@ -122,7 +124,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="ViewModels\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
