@@ -102,6 +102,7 @@
     <Compile Include="Analyser\Analyser.cs" />
     <Compile Include="Analyser\TwoHumpsAnalyser.cs" />
     <Compile Include="Analyser\ViscouseRemanentMagnet.cs" />
+    <Compile Include="Reader\ReaderManger.cs" />
     <Compile Include="ViewModels\BordersViewModel.cs" />
     <Compile Include="ViewModels\ConfigurateOutputViewModel.cs" />
     <Compile Include="View\BordersForAnalyseView.xaml.cs">
@@ -110,7 +111,7 @@
     <Compile Include="DispatchService.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="OneFileReader.cs" />
+    <Compile Include="Reader\OneFileReader.cs" />
     <Compile Include="XmlConfigManger.cs" />
     <Page Include="View\BordersForAnalyseView.xaml">
       <SubType>Designer</SubType>

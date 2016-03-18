@@ -11,7 +11,7 @@ using JonesWPF.View;
 
 namespace JonesWPF.ViewModels
 {
-    class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : INotifyPropertyChanged
     {
         public ICommand StartCommand { get; set; }
         public ICommand OpenCommand { get; set; }
@@ -26,7 +26,8 @@ namespace JonesWPF.ViewModels
         public string MainTblk
         {
             get { return mainTblk; }
-            set {
+            set
+            {
                 if (mainTblk != value)
                 {
                     mainTblk = value;
@@ -50,7 +51,7 @@ namespace JonesWPF.ViewModels
                 }
             }
         }
-        
+
 
         private void logTextEventHandler(string message)
         {
@@ -224,14 +225,14 @@ namespace JonesWPF.ViewModels
                 foreach (var directory in directories)
                 {
                     LogText += directory.ToString();
-                } 
+                }
             }
         }
 
         private void CancelMethod()
         {
-                TotalCount = 0;
-                tokenSource.Cancel();
+            TotalCount = 0;
+            tokenSource.Cancel();
             startButtEnable = true;
         }
 
@@ -265,9 +266,6 @@ namespace JonesWPF.ViewModels
 
             LogText = "Starting operation";
 
-            tokenSource = new CancellationTokenSource();
-            CancellationToken token = tokenSource.Token;
-
             foreach (var directory in directories)
             {
                 MainTblk = directory.Split(new char[] { '\\' }).Last();
@@ -275,51 +273,24 @@ namespace JonesWPF.ViewModels
 
                 FileWriter.SetOutFileName(directory);
                 var filePaths = FolderManager.ChoozeFilesFrom(directory);
-
-                for (int outerPathCount = 0; outerPathCount < filePaths.Count; outerPathCount += 1)
+                //TODO Сделать ReadManager - статическим или сингтон или абстракция + реализация...
+                try
                 {
-                    var tasks = new List<Task<List<DataPoint>>>();
-                    for (int innerPathCount = 0; innerPathCount < 1; innerPathCount++)
-                    {
-                        if (outerPathCount + innerPathCount >= filePaths.Count)
-                        {
-                            break;
-                        }
-                        string path = filePaths[outerPathCount + innerPathCount];
-                        
-                        var oneFileReader = new OneFileReader(innerPathCount);
-                        //Подписка на события
-                        oneFileReader.ProgressStarted += ProgressStarted;
-                        oneFileReader.ProgressChanged += ProgressChanged;
-                        oneFileReader.ProgressEnded += ProgressEnded;
+                    var readerManager = Reader.ReaderManger.Instance(this);
 
-                        var mTask = Task<List<DataPoint>>.Factory.StartNew(oneFileReader.Read, new { Path = path, Token = token }, token);
-                        tasks.Add(mTask);
-                    }
+                    readerManager.TotalProgressChanhed += (arg) => TotalCount += arg;
 
-                    try
-                    {
-                        var result = await Task.WhenAll(tasks);
-
-                        foreach (var item in result)
-                        {
-                            Column = Column.Concat(item).ToList();
-                        }
-
-                        TotalCount = (outerPathCount + 4) * 100 / filePaths.Count;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        LogText += "\nCancelled";
-                    }
-                    catch (Exception ex)
-                    {
-                        LogText += "\n" + ex.Message;
-                    }
+                    var result = await readerManager.StartRead(filePaths,threadsCount: 4);
                 }
-                //FileWriter.Write(Analyzer.TwoHumps(Column));
+                catch (OperationCanceledException)
+                {
+                    LogText += "\nCancelled";
+                }
+                catch (Exception ex)
+                {
+                    LogText += "\n" + ex.Message;
+                }
             }
-            WorkComplited(true);
         }
 
         private void CloseMethod()
@@ -327,7 +298,7 @@ namespace JonesWPF.ViewModels
             XmlConfigManger.SaveConfig();
         }
 
-        private void ProgressChanged(int progress, int id)
+        public void ProgressChanged(int progress, int id)
         {
             switch (id)
             {
@@ -348,7 +319,7 @@ namespace JonesWPF.ViewModels
             }
         }
 
-        private void ProgressStarted(int id, string path)
+        public void ProgressStarted(int id, string path)
         {
             var name = path.Split(new char[] { '\\' }).Last();
             switch (id)
@@ -359,7 +330,7 @@ namespace JonesWPF.ViewModels
                     break;
                 case 1:
                     DispatchService.Invoke(() => SecondTblk = name);
-                    LogText += $"Started {name} ..."; 
+                    LogText += $"Started {name} ...";
                     break;
                 case 2:
                     DispatchService.Invoke(() => ThirdTblk = name);
@@ -367,14 +338,14 @@ namespace JonesWPF.ViewModels
                     break;
                 case 3:
                     DispatchService.Invoke(() => FouthTblk = name);
-                    LogText += $"Started {name} ..."; 
+                    LogText += $"Started {name} ...";
                     break;
                 default:
                     break;
             }
         }
 
-        private void ProgressEnded(int id, string path)
+        public void ProgressEnded(int id, string path)
         {
             var name = path.Split(new char[] { '\\' }).Last() + " complited...";
             switch (id)
