@@ -90,7 +90,7 @@ namespace JonesWPF.Reader
                 int viscosuty = buffer[7];
                 int relativeDeformation = buffer[8];
 
-                if (IsInAnaliseWindow(x, y))
+                if (IsSatisfyConditions(x, y, rockType))
                 {
                     column.Add(new DataPoint()
                     {
@@ -109,14 +109,22 @@ namespace JonesWPF.Reader
                 if (id % 1000000 == 0)
                 {
                     Debug.WriteLine($"{x},{y}");
-                    int a = (int)(id / 28e6 * 100);
                     ProgressChanged((int)(id / 28e6 * 100), threadID);
                 }
-            }
+            } 
         }
-        private bool IsInAnaliseWindow(int x, int y)
+        private bool IsSatisfyConditions(int x, int y, int rockType)
         {
-            return x > 2500000 && x < 2800000 && y > 0 && y < 20000;
+            var coordinateConditions = x > 2300000 && x < 2800000 && y < 20000;
+            //if (result == null)
+            //{
+            if (rockType > 1 && rockType < 7)
+            {
+                return coordinateConditions && true;
+            }
+            //    return false;
+            //}
+            return false;
         }
     }
 }

@@ -29,36 +29,23 @@ namespace JonesWPF.Analyser
         const double criticalSquare = 19780;
 
         double totalSquare = 0;
-        int time = 1;
-        List<int> temps;
+        List<int> times = new List<int>();
+
         //TODO костыли с VRM нужно понять что тут реализовывать. Мадиана или среднее? и тд...
         protected override bool doConcreteAnalyse(DataPoint curDataPoint)
         {
-            if (curDataPoint.Temperature < 859)
-            {
-                temps.Add(curDataPoint.Temperature);
-                temps.Sort();
+            times.Add(curDataPoint.Time);
+            var time = times.Count > 1 ? times.Last() - times.ElementAt(times.Count - 2) : times.Last();
+            totalSquare += curDataPoint.Temperature * Math.Log(10e10 * time * secInYear);
+            curDataPoint.VRM = (int)(totalSquare / criticalSquare);
 
-                var tempMedian = temps.ElementAt(temps.Count / 2);
-
-                time += curDataPoint.Time;
-                //critcalSquare = TempCur * Ln (10^10 * (timeAtTempCur = 1))
-                totalSquare = tempMedian * Math.Log(10e10 * time * secInYear);
-                curDataPoint.VRM = (int)(totalSquare / criticalSquare);
-                return temps.Count > 2 ? totalSquare / criticalSquare > 2 : false;
-            }
-            else
-            {
-                return false;
-            }
-
+            return totalSquare / criticalSquare > 2;
         }
 
         protected override void SetConcreteDefaults()
         {
             totalSquare = 0;
-            time = 1;
-            temps = new List<int>();
+            times = new List<int>();
         }
-   }
+    }
 }

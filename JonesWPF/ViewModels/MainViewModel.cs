@@ -22,15 +22,15 @@ namespace JonesWPF.ViewModels
         public ICommand CloseCommand { get; set; }
 
         #region PropsForUI
-        private string mainTblk;
-        public string MainTblk
+        private string totalProgressLabel;
+        public string TotalProgressLabel
         {
-            get { return mainTblk; }
+            get { return totalProgressLabel; }
             set
             {
-                if (mainTblk != value)
+                if (totalProgressLabel != value)
                 {
-                    mainTblk = value;
+                    totalProgressLabel = value;
                     OnPropertyChanged("MainTblk");
                 }
             }
@@ -262,11 +262,11 @@ namespace JonesWPF.ViewModels
         {
             try
             {
-                LogText = "Starting operation";
+                LogText = "Starting operation...";
 
                 foreach (var directory in directories)
                 {
-                    MainTblk = directory.Split(new char[] { '\\' }).Last();
+                    TotalProgressLabel = directory.Split(new char[] { '\\' }).Last();
 
                     var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
@@ -275,16 +275,19 @@ namespace JonesWPF.ViewModels
                     Reader.Manager.ProgressEnded += ProgressEnded;
                     Reader.Manager.TotalProgressChanhed += (eventArg) => TotalProgress += eventArg;
 
-                    var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 1);
+                    var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 4);
 
                     var analyserTH = Analyser.MultipleWarming.Instance();
                     var analyserVRM = Analyser.ViscouseRemanentMagnet.Instance();
 
-                    FileWriter.SetOutFileName(directory);
+                    FileWriter.SetOutFileName(directory + "VRM");
                     FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
 
-                    FileWriter.SetOutFileName(directory);
+                    FileWriter.SetOutFileName(directory + "TH");
                     FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
+
+                    FileWriter.SetOutFileName(directory + "HT");
+                    FileWriter.Write(datapoints.OrderByDescending(dp => dp.Temperature).Take(100));
                 }
             }
             catch (Exception ex)
@@ -388,7 +391,7 @@ namespace JonesWPF.ViewModels
             ThirdThrdCount = 0;
             FourthThrdCount = 0;
 
-            MainTblk = "Operation complited. Select new model.";
+            TotalProgressLabel = "Operation complited. Select new model.";
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
