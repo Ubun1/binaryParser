@@ -270,6 +270,9 @@ namespace JonesWPF.ViewModels
 
                     var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
+                    Reader.Manager.ProgressStarted += ProgressStarted;
+                    Reader.Manager.ProgressChanged += ProgressChanged;
+                    Reader.Manager.ProgressEnded += ProgressEnded;
                     Reader.Manager.TotalProgressChanhed += (eventArg) => TotalProgress += eventArg;
 
                     var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 1);
