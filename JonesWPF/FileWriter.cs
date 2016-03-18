@@ -53,20 +53,17 @@ namespace JonesWPF
             SomethingChanged($"OutFileName selected - {outFileName}");
         }
 
-        public static void Write(List<DataPoint[]> result)
+        public static void Write(List<DataPoint> datapoints)
         {
             //var dataPoints = result.SelectMany(r => r.ToList());
             var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt");
 
             file.WriteLine(MakeHeaders());
 
-            foreach (var dataPoints in result)
-            {
-                foreach (var dataPoint in dataPoints)
+                foreach (var datapoint in datapoints)
                 {
-                    file.WriteLine(MakeLine(dataPoint));
+                    file.WriteLine(MakeLine(datapoint));
                 }
-            }
 
             SomethingChanged($"file write complite");
             file.WriteLine("endOfFile");

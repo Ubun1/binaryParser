@@ -40,7 +40,7 @@
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Name="logBlock" Text="{Binding Path=MainTblk, Mode=OneWay}"/>
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" Name="mainThread" Height="40" Value="{Binding Path =TotalCount, Mode=OneWay}"></ProgressBar>
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="3" Name="mainThread" Height="40" Value="{Binding Path =TotalProgress, Mode=OneWay}"></ProgressBar>
             <Button Grid.Row="2" Grid.Column="0" Content="Start" Command="{Binding StartCommand}"></Button>
             <Button Grid.Row="2" Grid.Column="2" Content="Chancel" Command="{Binding CancelCommand}" IsEnabled="False"/>
             <StackPanel Grid.Row="4" Grid.ColumnSpan="3">

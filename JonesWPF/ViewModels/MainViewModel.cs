@@ -38,15 +38,15 @@ namespace JonesWPF.ViewModels
 
         private bool startButtEnable = false;
 
-        private int totalCount;
-        public int TotalCount
+        private int totalProgress;
+        public int TotalProgress
         {
-            get { return totalCount; }
+            get { return totalProgress; }
             set
             {
-                if (totalCount != value)
+                if (totalProgress != value)
                 {
-                    totalCount = value;
+                    totalProgress = value;
                     OnPropertyChanged("TotalCount");
                 }
             }
@@ -187,7 +187,6 @@ namespace JonesWPF.ViewModels
         #endregion
 
         FolderBrowserDialog loadFolderBrowser, saveFolderBrowser;
-        CancellationTokenSource tokenSource;
         List<DataPoint> Column;
         List<string> directories;
 
@@ -231,8 +230,7 @@ namespace JonesWPF.ViewModels
 
         private void CancelMethod()
         {
-            TotalCount = 0;
-            tokenSource.Cancel();
+            TotalProgress = 0;
             startButtEnable = true;
         }
 
@@ -262,34 +260,33 @@ namespace JonesWPF.ViewModels
 
         private async void StartMethod()
         {
-            startButtEnable = false;
-
-            LogText = "Starting operation";
-
-            foreach (var directory in directories)
+            try
             {
-                MainTblk = directory.Split(new char[] { '\\' }).Last();
-                TotalCount = 0;
+                LogText = "Starting operation";
 
-                FileWriter.SetOutFileName(directory);
-                var filePaths = FolderManager.ChoozeFilesFrom(directory);
-                //TODO Сделать ReadManager - статическим или сингтон или абстракция + реализация...
-                try
+                foreach (var directory in directories)
                 {
-                    var readerManager = Reader.ReaderManger.Instance(this);
+                    MainTblk = directory.Split(new char[] { '\\' }).Last();
 
-                    readerManager.TotalProgressChanhed += (arg) => TotalCount += arg;
+                    var filePaths = FolderManager.ChoozeFilesFrom(directory);
 
-                    var result = await readerManager.StartRead(filePaths,threadsCount: 4);
+                    Reader.Manager.TotalProgressChanhed += (eventArg) => TotalProgress += eventArg;
+
+                    var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 1);
+
+                    var analyserTH = Analyser.MultipleWarming.Instance();
+                    var analyserVRM = Analyser.ViscouseRemanentMagnet.Instance();
+
+                    FileWriter.SetOutFileName(directory);
+                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+
+                    FileWriter.SetOutFileName(directory);
+                    FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
                 }
-                catch (OperationCanceledException)
-                {
-                    LogText += "\nCancelled";
-                }
-                catch (Exception ex)
-                {
-                    LogText += "\n" + ex.Message;
-                }
+            }
+            catch (Exception ex)
+            {
+                LogText += "\n" + ex.Message;
             }
         }
 
@@ -382,7 +379,7 @@ namespace JonesWPF.ViewModels
 
             startButtEnable = true;
 
-            TotalCount = 0;
+            TotalProgress = 0;
             FirstThrdCount = 0;
             SecondThrdCount = 0;
             ThirdThrdCount = 0;

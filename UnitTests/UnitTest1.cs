@@ -13,7 +13,7 @@ namespace UnitTests
         public void TwoHumpsTest()
         {
             var dataPoints = MakeTestCollectionForTH();
-            Analyser analyser = TwoHumps.Instance();
+            Analyser analyser = MultipleWarming.Instance();
             var expected = dataPoints.Take(dataPoints.Count - 1).ToList().Last();
             var real = analyser.doAnalyse(dataPoints).ToList().Last();
             Assert.AreEqual(expected, real);

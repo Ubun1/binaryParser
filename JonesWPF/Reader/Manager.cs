@@ -7,35 +7,13 @@ using JonesWPF.ViewModels;
 
 namespace JonesWPF.Reader
 {
-    public class ReaderManger
+    public static class Manager
     {
-        #region SingletonRealisation
-        static ReaderManger uniqueObj;
+        static List<Task<List<DataPoint>>> tasks;
 
-        public static ReaderManger Instance(MainViewModel mainViewModel)
-        {
-            if (uniqueObj == null)
-            {
-                uniqueObj = new ReaderManger();
-                return uniqueObj;
-            }
+        public static event Action<int> TotalProgressChanhed;
 
-            viewModel = mainViewModel;
-
-            return uniqueObj;
-        }
-
-        private ReaderManger()
-        { }
-        #endregion
-
-        static MainViewModel viewModel;
-
-        List<Task<List<DataPoint>>> tasks;
-
-        public event Action<int> TotalProgressChanhed;
-
-        public async Task<List<DataPoint>> StartRead(List<string> filePaths, int threadsCount)
+        public static async Task<List<DataPoint>> StartRead(List<string> filePaths, int threadsCount)
         {
             int totalProgress = 0;
             for (totalProgress = 0; totalProgress < filePaths.Count; totalProgress += threadsCount)
@@ -51,7 +29,7 @@ namespace JonesWPF.Reader
         }
 
         //TODO передать сюда ссылку на класс обработчик главного окна и внем подписать события чтения на методы обработчики переданного класа.
-        private void ConfigurateReaders(List<string> pathsForThreads)
+        private static void ConfigurateReaders(List<string> pathsForThreads)
         {
             var threadsCount = pathsForThreads.Count;
             if (threadsCount > 5)
@@ -64,13 +42,14 @@ namespace JonesWPF.Reader
             for (int id = 0; id < threadsCount; id++)
             {
                 var fileReader = new OneFileReader(id, pathsForThreads[id]);
+
                 var task = new Task<List<DataPoint>>(fileReader.Read);
-
-                fileReader.ProgressStarted += viewModel.ProgressStarted;
-                fileReader.ProgressChanged += viewModel.ProgressChanged;
-                fileReader.ProgressEnded += viewModel.ProgressEnded;
-
+                task.Start();
                 tasks.Add(task);
+
+                //fileReader.ProgressStarted += viewModel.ProgressStarted;
+                //fileReader.ProgressChanged += viewModel.ProgressChanged;
+                //fileReader.ProgressEnded += viewModel.ProgressEnded;
             }
         }
     }
