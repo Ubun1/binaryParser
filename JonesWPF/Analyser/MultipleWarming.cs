@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace JonesWPF.Analyser
 {
-    public class TwoHumps : Analyser
+    public class MultipleWarming : Analyser
     {
         #region SingletonRealisation
-        static TwoHumps uniqueObj;
+        static MultipleWarming uniqueObj;
 
-        public static TwoHumps Instance()
+        public static MultipleWarming Instance()
         {
             if (uniqueObj == null)
             {
-                uniqueObj = new TwoHumps();
+                uniqueObj = new MultipleWarming();
                 return uniqueObj;
             }
             return uniqueObj;
         }
 
-        private TwoHumps()
+        private MultipleWarming()
         { }
         #endregion
 

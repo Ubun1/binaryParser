@@ -7,54 +7,38 @@ using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace JonesWPF
+namespace JonesWPF.Reader
 {
     //TODO Баги - столбцы для вывода сохраняются только если вызывать соответствующее окно.
     class OneFileReader
     {
         //TODO Допилить выбор из этого окна. Он положил мне весь анализ.
-        static int _startX, _endX, _startY, _endY;
-        public static void SetBorders(int startX = 2300, int endX = 2900, int startY = 0, int endY = 75)
-        {
-            _startX = startX;
-            _endX = endX;
-            _startY = startY;
-            _endY = endY;
-            Debug.WriteLine($"{_startX},{_endX},{_startY},{_endY}");
-        }
-        private bool IsInAnaliseWindow(int x, int y)
-        {
-            return x > 2500000 && x < 2800000 && y > 0 && y < 20000;
-        }
-
         List<DataPoint> column;
         BinaryReader binReader;
 
         long marknum;
         int time;
-        readonly int workerID;
+        readonly int threadID;
+        string path;
 
-        public OneFileReader(int id)
+        public OneFileReader(int id, string path)
         {
             column = new List<DataPoint>();
-            workerID = id;
+            threadID = id;
+            this.path = path;
         }
 
-        public List<DataPoint> Read(dynamic obj)
-        {      
-            string path = obj.Path;
-            CancellationToken token = obj.Token;
-
-            ProgressStarted(workerID, path);
+        public List<DataPoint> Read()
+        {  
+            ProgressStarted(threadID, path);
 
             var stream = new FileStream(path, FileMode.Open);
             binReader = new BinaryReader(stream);
-            token.ThrowIfCancellationRequested();
 
             ReadInitialInf();
             ReadMarkersInf();
 
-            ProgressEnded(workerID, path);
+            ProgressEnded(threadID, path);
 
             binReader.Close();
             stream.Close();
@@ -62,6 +46,10 @@ namespace JonesWPF
             var rand = new Random();
             return column.OrderBy(arg => rand.Next()).Take(150000).ToList();
         }
+
+        public event Action<int, string> ProgressStarted;
+        public event Action<int, int> ProgressChanged;
+        public event Action<int, string> ProgressEnded;
 
         private void ReadInitialInf()
         {
@@ -122,13 +110,13 @@ namespace JonesWPF
                 {
                     Debug.WriteLine($"{x},{y}");
                     int a = (int)(id / 28e6 * 100);
-                    ProgressChanged((int)(id / 28e6 * 100), workerID);
+                    ProgressChanged((int)(id / 28e6 * 100), threadID);
                 }
             }
         }
-
-        public event Action<int, string> ProgressStarted;
-        public event Action<int, int> ProgressChanged;
-        public event Action<int, string> ProgressEnded;
+        private bool IsInAnaliseWindow(int x, int y)
+        {
+            return x > 2500000 && x < 2800000 && y > 0 && y < 20000;
+        }
     }
 }

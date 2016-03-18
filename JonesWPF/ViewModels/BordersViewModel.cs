@@ -15,7 +15,6 @@ namespace JonesWPF.ViewModels
                 {
                     startX = value;
                     OnPropertyChanged("StartX");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
@@ -29,7 +28,6 @@ namespace JonesWPF.ViewModels
                 {
                     endX = value;
                     OnPropertyChanged("EndX");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
@@ -43,7 +41,6 @@ namespace JonesWPF.ViewModels
                 {
                     startY = value;
                     OnPropertyChanged("StartY");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
@@ -57,7 +54,6 @@ namespace JonesWPF.ViewModels
                 {
                     endY = value;
                     OnPropertyChanged("EndY");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
