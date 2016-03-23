@@ -260,11 +260,11 @@ namespace JonesWPF.ViewModels
 
         private async void StartMethod()
         {
-            try
-            {
-                LogText = "Starting operation...";
+            LogText = "Starting operation...";
 
-                foreach (var directory in directories)
+            foreach (var directory in directories)
+            {
+                try
                 {
                     TotalProgressLabel = directory.Split(new char[] { '\\' }).Last();
 
@@ -280,16 +280,30 @@ namespace JonesWPF.ViewModels
                     var analyserTH = Analyser.MultipleWarming.Instance();
                     var analyserVRM = Analyser.ViscouseRemanentMagnet.Instance();
 
-                    FileWriter.SetOutFileName(directory + "VRM");
+                    FileWriter.SetOutFileName(directory + "VRM" + "550");
+                    analyserTH.TempCurie = 550;
+                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+
+                    FileWriter.SetOutFileName(directory + "VRM" + "600");
+                    analyserTH.TempCurie = 600;
+                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+
+                    FileWriter.SetOutFileName(directory + "VRM" + "700");
+                    analyserTH.TempCurie = 700;
+                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+
+                    FileWriter.SetOutFileName(directory + "VRM" + "859");
+                    analyserTH.TempCurie = 859;
                     FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
 
                     FileWriter.SetOutFileName(directory + "TH");
                     FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
                 }
-            }
-            catch (Exception ex)
-            {
-                LogText += "\n" + ex.Message;
+                catch (Exception ex)
+                {
+                    LogText += "\n" + ex.Message;
+                    continue;
+                }
             }
         }
 

@@ -22,7 +22,7 @@ namespace JonesWPF.Analyser
         }
 
         private MultipleWarming()
-        { }
+        {        }
         #endregion
 
         bool firsthumpreached = false;
@@ -32,7 +32,7 @@ namespace JonesWPF.Analyser
         bool thirdTroughtReached = false;
         bool firstIter = false;
 
-        int tempCurie = 859;
+        public int TempCurie { get; set; } = 859;
 
         protected override void SetConcreteDefaults()
         {
@@ -52,34 +52,34 @@ namespace JonesWPF.Analyser
             }
             //первый -
             if (!firsttroughtreached &&
-                curDataPoint.Temperature < tempCurie)
+                curDataPoint.Temperature < TempCurie)
             {
                 firstIter = true;
                 return false;
             }
             //первый +
             if (!firsthumpreached && firstIter &&
-                curDataPoint.Temperature > tempCurie)
+                curDataPoint.Temperature > TempCurie)
             {
                 firsttroughtreached = true;
                 return false;
             }
             //второй -
             if (!secondtroughtreached &&
-                curDataPoint.Temperature < tempCurie)
+                curDataPoint.Temperature < TempCurie)
             {
                 firsthumpreached = true;
                 return false;
             }
             //второй +
             if (!secondhumpreached &&
-                curDataPoint.Temperature > tempCurie)
+                curDataPoint.Temperature > TempCurie)
             {
                 secondtroughtreached = true;
                 return false;
             }
             //третий -
-            if (curDataPoint.Temperature < tempCurie)
+            if (curDataPoint.Temperature < TempCurie)
             {
                 thirdTroughtReached = true;
                 return true;
