@@ -75,42 +75,50 @@ namespace JonesWPF.Reader
         {
             for (long id = 0; id < marknum; id++)
             {
-                int[] buffer = new int[9];
-                for (int innerIndex = 0; innerIndex < 9; innerIndex++)
+                try
                 {
-                    buffer[innerIndex] = (int)binReader.ReadSingle();
-                }
-
-                int rockType = binReader.ReadByte();
-                int x = buffer[0];
-                int y = buffer[1];
-                int temperature = buffer[2] == 0 ? 273 : buffer[2];
-                int density = buffer[3];
-                int waterContent = buffer[4];
-                int viscosuty = buffer[7];
-                int relativeDeformation = buffer[8];
-
-                if (IsSatisfyConditions(x, y, rockType))
-                {
-                    column.Add(new DataPoint()
+                    int[] buffer = new int[9];
+                    for (int innerIndex = 0; innerIndex < 9; innerIndex++)
                     {
-                        Id = (int)id,
-                        X = x,
-                        Y = y,
-                        Temperature = temperature,
-                        Time = time,
-                        Density = density,
-                        RelativeDeformation = relativeDeformation,
-                        RockType = rockType,
-                        WaterContent = waterContent,
-                        Viscosity = viscosuty
-                    });
+                        buffer[innerIndex] = (int)binReader.ReadSingle();
+                    }
+
+                    int rockType = binReader.ReadByte();
+                    int x = buffer[0];
+                    int y = buffer[1];
+                    int temperature = buffer[2] == 0 ? 273 : buffer[2];
+                    int density = buffer[3];
+                    int waterContent = buffer[4];
+                    int viscosuty = buffer[7];
+                    int relativeDeformation = buffer[8];
+
+                    if (IsSatisfyConditions(x, y, rockType))
+                    {
+                        column.Add(new DataPoint()
+                        {
+                            Id = (int)id,
+                            X = x,
+                            Y = y,
+                            Temperature = temperature,
+                            Time = time,
+                            Density = density,
+                            RelativeDeformation = relativeDeformation,
+                            RockType = rockType,
+                            WaterContent = waterContent,
+                            Viscosity = viscosuty
+                        });
+                    }
+                    if (id % 1000000 == 0)
+                    {
+                        Debug.WriteLine($"{x},{y}");
+                        ProgressChanged((int)(id / 28e6 * 100), threadID);
+                    }
                 }
-                if (id % 1000000 == 0)
+                catch (Exception)
                 {
-                    Debug.WriteLine($"{x},{y}");
-                    ProgressChanged((int)(id / 28e6 * 100), threadID);
+                    continue;
                 }
+               
             } 
         }
         private bool IsSatisfyConditions(int x, int y, int rockType)

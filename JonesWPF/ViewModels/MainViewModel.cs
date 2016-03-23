@@ -31,7 +31,7 @@ namespace JonesWPF.ViewModels
                 if (totalProgressLabel != value)
                 {
                     totalProgressLabel = value;
-                    OnPropertyChanged("MainTblk");
+                    OnPropertyChanged("TotalProgressLabel");
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace JonesWPF.ViewModels
                     Reader.Manager.ProgressEnded += ProgressEnded;
                     Reader.Manager.TotalProgressChanhed += (eventArg) => TotalProgress += eventArg;
 
-                    var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 4);
+                    var datapoints = await Reader.Manager.StartRead(filePaths, threadsCount: 1);
 
                     var analyserTH = Analyser.MultipleWarming.Instance();
                     var analyserVRM = Analyser.ViscouseRemanentMagnet.Instance();
@@ -285,9 +285,6 @@ namespace JonesWPF.ViewModels
 
                     FileWriter.SetOutFileName(directory + "TH");
                     FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
-
-                    FileWriter.SetOutFileName(directory + "HT");
-                    FileWriter.Write(datapoints.OrderByDescending(dp => dp.Temperature).Take(100));
                 }
             }
             catch (Exception ex)
