@@ -9,8 +9,17 @@ namespace JonesWPF.Reader
 {
     public static class Manager
     {
+        static double MaxWidth, MaxDepth, MinWidth;
 
         public static event Action<int> TotalProgressChanhed;
+
+        public static void SetBorders(int maxWidth, int minWidth, int maxDepth)
+        {
+            var metersPerKm = 10e3;
+            MaxDepth = maxDepth * metersPerKm;
+            MinWidth = minWidth * metersPerKm;
+            MaxWidth = maxWidth * metersPerKm;
+        }
 
         public static async Task<List<DataPoint>> StartRead(List<string> filePaths, int threadsCount)
         {
@@ -31,7 +40,6 @@ namespace JonesWPF.Reader
             return datapoints;
         }
 
-        //TODO передать сюда ссылку на класс обработчик главного окна и внем подписать события чтения на методы обработчики переданного класа.
         private static List<Task<List<DataPoint>>> ConfigurateReaders(List<string> pathsForThreads)
         {
             var threadsCount = pathsForThreads.Count;
@@ -45,6 +53,7 @@ namespace JonesWPF.Reader
             for (int id = 0; id < threadsCount; id++)
             {
                 var fileReader = new OneFileReader(id, pathsForThreads[id]);
+                fileReader.SetBorders(MaxWidth, MinWidth, MaxDepth);
 
                 var task = new Task<List<DataPoint>>(fileReader.Read);
                 task.Start();

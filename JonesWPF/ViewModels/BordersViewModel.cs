@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System;
+using System.Windows.Input;
 
 namespace JonesWPF.ViewModels
 {
@@ -19,7 +21,7 @@ namespace JonesWPF.ViewModels
             }
         }
 
-        private int endX = 2900;
+        private int endX = 2800;
         public int EndX
         {
             get { return endX; }
@@ -32,20 +34,7 @@ namespace JonesWPF.ViewModels
             }
         }
 
-        private int startY = 0;
-        public int StartY
-        {
-            get { return startY; }
-            set {
-                if (startY != value)
-                {
-                    startY = value;
-                    OnPropertyChanged("StartY");
-                }
-            }
-        }
-
-        private int endY = 75;
+        private int endY = 20;
         public int EndY
         {
             get { return endY; }
@@ -59,13 +48,22 @@ namespace JonesWPF.ViewModels
         }
         #endregion
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        public ICommand CloseCommand { get; set; }
+
+        public BordersViewModel()
+        {
+            CloseCommand = new RelayCommand(arg => BordersChanged(startX, endX, endY));
+        }
+
+        private void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        public event Action<int, int, int> BordersChanged;
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

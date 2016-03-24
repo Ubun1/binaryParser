@@ -9,23 +9,30 @@ using System.Threading.Tasks;
 
 namespace JonesWPF.Reader
 {
-    //TODO Баги - столбцы для вывода сохраняются только если вызывать соответствующее окно.
     class OneFileReader
     {
-        //TODO Допилить выбор из этого окна. Он положил мне весь анализ.
         List<DataPoint> column;
         BinaryReader binReader;
 
         long marknum;
         int time;
+        double maxWidth = 2800000, minWidth = 23000000, maxDepth = 20000;
+
         readonly int threadID;
-        string path;
+        readonly string path;
 
         public OneFileReader(int id, string path)
         {
-            column = new List<DataPoint>();
-            threadID = id;
+            this.column = new List<DataPoint>();
+            this.threadID = id;
             this.path = path;
+        }
+
+        public void SetBorders(double maxWidth, double minWidth, double maxDepth)
+        {
+            this.maxDepth = maxDepth;
+            this.maxWidth = maxWidth;
+            this.minWidth = minWidth;
         }
 
         public List<DataPoint> Read()
@@ -110,7 +117,6 @@ namespace JonesWPF.Reader
                     }
                     if (id % 1000000 == 0)
                     {
-                        Debug.WriteLine($"{x},{y}");
                         ProgressChanged((int)(id / 28e6 * 100), threadID);
                     }
                 }
@@ -123,15 +129,13 @@ namespace JonesWPF.Reader
         }
         private bool IsSatisfyConditions(int x, int y, int rockType)
         {
-            var coordinateConditions = x > 2300000 && x < 2800000 && y < 20000;
-            //if (result == null)
-            //{
+            var coordinateConditions = x > minWidth && x < maxWidth && y < maxDepth;
+          
             if (rockType > 1 && rockType < 7)
             {
                 return coordinateConditions && true;
             }
-            //    return false;
-            //}
+           
             return false;
         }
     }

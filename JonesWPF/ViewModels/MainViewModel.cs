@@ -249,6 +249,9 @@ namespace JonesWPF.ViewModels
         private void SelectBoundariesMethod()
         {
             var selectBoundarWindow = new BordersForAnalyseView();
+            var foo = selectBoundarWindow.DataContext as BordersViewModel;
+
+            foo.BordersChanged += Reader.Manager.SetBorders;
             selectBoundarWindow.ShowDialog();
         }
 
@@ -280,24 +283,16 @@ namespace JonesWPF.ViewModels
                     var analyserTH = Analyser.MultipleWarming.Instance();
                     var analyserVRM = Analyser.ViscouseRemanentMagnet.Instance();
 
-                    FileWriter.SetOutFileName(directory + "VRM" + "550");
-                    analyserTH.TempCurie = 550;
-                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+                    var temperatures = new int[] { 550, 600, 700, 859 };
 
-                    FileWriter.SetOutFileName(directory + "VRM" + "600");
-                    analyserTH.TempCurie = 600;
-                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
+                    foreach (var temp in temperatures)
+                    {
+                        FileWriter.SetOutFileName(directory + "TH" + temp);
+                        FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
+                    }
 
-                    FileWriter.SetOutFileName(directory + "VRM" + "700");
-                    analyserTH.TempCurie = 700;
+                    FileWriter.SetOutFileName(directory + "VRM");
                     FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
-
-                    FileWriter.SetOutFileName(directory + "VRM" + "859");
-                    analyserTH.TempCurie = 859;
-                    FileWriter.Write(analyserVRM.doAnalyse(datapoints).ToList());
-
-                    FileWriter.SetOutFileName(directory + "TH");
-                    FileWriter.Write(analyserTH.doAnalyse(datapoints).ToList());
                 }
                 catch (Exception ex)
                 {
