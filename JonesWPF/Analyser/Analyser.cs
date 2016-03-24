@@ -40,7 +40,6 @@ namespace JonesWPF.Analyser
 
             return output;
         }
-        //TODO допилить события в классах наследниках.
         protected event Action<string> SomethingChanged;
 
         protected abstract void SetConcreteDefaults();

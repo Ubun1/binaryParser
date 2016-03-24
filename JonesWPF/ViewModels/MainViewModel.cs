@@ -52,11 +52,6 @@ namespace JonesWPF.ViewModels
             }
         }
 
-
-        private void logTextEventHandler(string message)
-        {
-            LogText += message;
-        }
         private string logText;
         public string LogText
         {
@@ -208,9 +203,10 @@ namespace JonesWPF.ViewModels
             //loadFolderBrowser = new FolderBrowserDialog();
             Column = new List<DataPoint>();
 
-            FileWriter.SomethingChanged += logTextEventHandler;
+            FileWriter.SomethingChanged += arg => LogText += arg;
+            Reader.Manager.SomethingChanged += arg => LogText += arg;
             //Analyzer.SomethingChanged += logTextEventHandler;
-            XmlConfigManger.SomethingChanged += logTextEventHandler;
+            XmlConfigManger.SomethingChanged += arg => LogText += arg;
         }
 
         private void OpenMethod()

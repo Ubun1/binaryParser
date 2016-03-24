@@ -13,12 +13,12 @@ namespace JonesWPF.Reader
 
         public static event Action<int> TotalProgressChanhed;
 
-        public static void SetBorders(int maxWidth, int minWidth, int maxDepth)
+        public static void SetBorders(double minWidth, double maxWidth, double maxDepth)
         {
-            var metersPerKm = 10e3;
-            MaxDepth = maxDepth * metersPerKm;
-            MinWidth = minWidth * metersPerKm;
-            MaxWidth = maxWidth * metersPerKm;
+            MaxDepth = maxDepth;
+            MinWidth = minWidth;
+            MaxWidth = maxWidth;
+            SomethingChanged($"Set new borders: x > {MinWidth}, x < {MaxWidth}; y < {MaxDepth}");
         }
 
         public static async Task<List<DataPoint>> StartRead(List<string> filePaths, int threadsCount)
@@ -66,6 +66,8 @@ namespace JonesWPF.Reader
 
             return tasks;
         }
+
+        public static event Action<string> SomethingChanged;
         public static event Action<int, string> ProgressStarted;
         public static event Action<int, int> ProgressChanged;
         public static event Action<int, string> ProgressEnded;

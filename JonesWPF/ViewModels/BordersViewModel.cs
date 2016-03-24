@@ -52,7 +52,7 @@ namespace JonesWPF.ViewModels
 
         public BordersViewModel()
         {
-            CloseCommand = new RelayCommand(arg => BordersChanged(startX, endX, endY));
+            CloseCommand = new RelayCommand(arg => BordersChanged(startX * 10e2, endX * 10e2, endY * 10e2));
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -62,8 +62,8 @@ namespace JonesWPF.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        
-        public event Action<int, int, int> BordersChanged;
+
+        public event Action<double, double, double> BordersChanged;
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
