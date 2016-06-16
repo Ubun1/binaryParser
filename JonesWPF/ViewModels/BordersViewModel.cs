@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System;
+using System.Windows.Input;
 
 namespace JonesWPF.ViewModels
 {
@@ -15,12 +17,11 @@ namespace JonesWPF.ViewModels
                 {
                     startX = value;
                     OnPropertyChanged("StartX");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
 
-        private int endX = 2900;
+        private int endX = 2800;
         public int EndX
         {
             get { return endX; }
@@ -29,26 +30,11 @@ namespace JonesWPF.ViewModels
                 {
                     endX = value;
                     OnPropertyChanged("EndX");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
 
-        private int startY = 0;
-        public int StartY
-        {
-            get { return startY; }
-            set {
-                if (startY != value)
-                {
-                    startY = value;
-                    OnPropertyChanged("StartY");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
-                }
-            }
-        }
-
-        private int endY = 75;
+        private int endY = 20;
         public int EndY
         {
             get { return endY; }
@@ -57,20 +43,27 @@ namespace JonesWPF.ViewModels
                 {
                     endY = value;
                     OnPropertyChanged("EndY");
-                    OneFileReader.SetBorders(startX, endX, startY, endY);
                 }
             }
         }
         #endregion
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        public ICommand CloseCommand { get; set; }
+
+        public BordersViewModel()
         {
-            //Debug.WriteLine($"{StartX},{EndX},{StartY},{EndY}");
+            CloseCommand = new RelayCommand(arg => BordersChanged(startX * 10e2, endX * 10e2, endY * 10e2));
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        public event Action<double, double, double> BordersChanged;
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -18,7 +18,7 @@ namespace JonesWPF
             string[] tmpFilePaths;
 
             var directories = new List<string>();
-           
+            
             tmpFilePaths = Directory.GetFiles(selectedPath, "*.prn", SearchOption.AllDirectories);
             foreach (string path in tmpFilePaths)
                 if (path.Contains("voac") && !path.Contains("init"))

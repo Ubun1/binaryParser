@@ -80,6 +80,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -94,19 +95,24 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="ViewModels\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Analizer.cs" />
+    <Compile Include="Analyser\Analyser.cs" />
+    <Compile Include="Analyser\MultipleWarming.cs" />
+    <Compile Include="Analyser\ViscouseRemanentMagnet.cs" />
+    <Compile Include="Reader\Manager.cs" />
     <Compile Include="ViewModels\BordersViewModel.cs" />
+    <Compile Include="ViewModels\ConfigurateOutputViewModel.cs" />
     <Compile Include="View\BordersForAnalyseView.xaml.cs">
       <DependentUpon>BordersForAnalyseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DispatchService.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="OneFileReader.cs" />
+    <Compile Include="Reader\OneFileReader.cs" />
+    <Compile Include="XmlConfigManger.cs" />
     <Page Include="View\BordersForAnalyseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,7 +125,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="ViewModels\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -152,7 +158,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

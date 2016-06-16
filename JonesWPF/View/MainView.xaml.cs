@@ -1,19 +1,15 @@
 ﻿using System.Windows;
 
-namespace JonesWPF
+namespace JonesWPF.View
 {
-    namespace View
+    /// <summary>
+    /// Логика взаимодействия для MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
-
-        /// <summary>
-        /// Логика взаимодействия для MainWindow.xaml
-        /// </summary>
-        public partial class MainWindow : Window
+        public MainWindow()
         {
-            public MainWindow()
-            {
-                InitializeComponent();
-            }
+            InitializeComponent();
         }
     }
 }

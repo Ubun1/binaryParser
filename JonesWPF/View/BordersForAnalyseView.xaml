@@ -3,10 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JonesWPF.ViewModels"
-        Title="Select boundaries" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+        xmlns:i ="http://schemas.microsoft.com/expression/2010/interactivity"
+        Title="Select boundaries" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Window.DataContext>
         <local:BordersViewModel/>
     </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding CloseCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
     <Grid HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -22,12 +30,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0"  Text="Start X"></TextBlock>
-        <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Path=StartX, Mode=TwoWay}"></TextBox>
+        <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Path=StartX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <TextBlock Grid.Column="1" Grid.Row="0" Text="End X" HorizontalAlignment="Center"></TextBlock>
-        <TextBox  Grid.Column="1" Grid.Row="1" Text="{Binding Path=EndX, Mode=TwoWay}"></TextBox>
+        <TextBox  Grid.Column="1" Grid.Row="1" Text="{Binding Path=EndX, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         <TextBlock  Grid.Column="0" Grid.Row="2" Text="Start Y"/>
-        <TextBox Grid.Column="0" Grid.Row="3" Text="{Binding Path=StartY, Mode=TwoWay}" ></TextBox>
+        <TextBox Grid.Column="0" Grid.Row="3" Text="{Binding Path=StartY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
         <TextBlock  Grid.Column="1" Grid.Row="2" Text="End Y" HorizontalAlignment="Center"/>
-        <TextBox  Grid.Column="1" Grid.Row="3" Text="{Binding Path=EndY, Mode=TwoWay}"></TextBox>
+        <TextBox  Grid.Column="1" Grid.Row="3" Text="{Binding Path=EndY, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
     </Grid>
 </Window>
