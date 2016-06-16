@@ -56,18 +56,21 @@ namespace JonesWPF
 
         public static void Write(IEnumerable<DataPoint> datapoints)
         {
-            var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt");
-
-            file.WriteLine(MakeHeaders());
-
-            foreach (var datapoint in datapoints)
+            using (var file = new StreamWriter($"{SavingDirectory}\\{outFileName}.txt"))
             {
-                file.WriteLine(MakeLine(datapoint));
+                file.WriteLine(MakeHeaders());
+
+                foreach (var datapoint in datapoints)
+                {
+                    file.WriteLine(MakeLine(datapoint));
+                }
+
+                SomethingChanged($"file write complite");
+                file.WriteLine("endOfFile");
+                file.Close();
             }
 
-            SomethingChanged($"file write complite");
-            file.WriteLine("endOfFile");
-            file.Close();
+            
         }
 
         private static string MakeHeaders()
